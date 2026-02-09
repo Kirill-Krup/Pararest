@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import type {LoginRequest} from "../models/auth.types.ts";
-import authservice from "../api/authservice.ts";
-import '../styles/LoginForm.css'
+import type {LoginRequest} from "../../models/auth.types.ts";
+import authservice from "../../api/authservice.ts";
+import '../../styles/auth/LoginForm.css'
 
 interface LoginFormProps {
     onSuccess?: () => void;

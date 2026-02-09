@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import RegisterForm from '../components/RegisterForm';
-import '../styles/RegisterPage.css';
+import RegisterForm from '../../components/auth/RegisterForm.tsx';
+import '../../styles/auth/RegisterPage.css';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();

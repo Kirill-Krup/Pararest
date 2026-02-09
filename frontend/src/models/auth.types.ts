@@ -1,4 +1,4 @@
-import type { UserDTO } from "./UserDTO.ts";
+import type { UserAddDTO } from "./UserAddDTO.ts";
 
 export interface JwtResponse{
     accessToken:string,
@@ -9,7 +9,7 @@ export interface JwtResponse{
 export interface RegisterRequest{
     password:string,
     rememberMe:boolean,
-    newUser:UserDTO
+    newUser:UserAddDTO
 }
 
 export interface LoginRequest{

@@ -1,7 +1,9 @@
+
 export interface UserDTO{
-    login:string,
-    email:string,
-    fullName:string,
-    phone:string,
-    birthday:string
+    id: number,
+    login: string,
+    email: string,
+    wallet: number,
+    fullName: string,
+    avatar: string
 }

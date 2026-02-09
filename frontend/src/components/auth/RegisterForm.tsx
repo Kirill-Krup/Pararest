@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import type {RegisterRequest} from '../models/auth.types';
-import type {UserDTO} from '../models/UserDTO';
-import authService from '../api/authservice';
-import '../styles/RegisterForm.css';
+import type {RegisterRequest} from '../../models/auth.types.ts';
+import type {UserAddDTO} from '../../models/UserAddDTO.ts';
+import authService from '../../api/authservice.ts';
+import '../../styles/auth/RegisterForm.css';
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -86,7 +86,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   };
 
   const prepareRequestData = (): RegisterRequest => {
-    const newUser: UserDTO = {
+    const newUser: UserAddDTO = {
       login: formData.login,
       email: formData.email,
       fullName: formData.fullName,
