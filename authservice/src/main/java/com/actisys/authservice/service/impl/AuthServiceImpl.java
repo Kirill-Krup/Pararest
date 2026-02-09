@@ -1,0 +1,117 @@
+package com.actisys.authservice.service.impl;
+
+import com.actisys.authservice.client.UserServiceClient;
+import com.actisys.authservice.dto.JwtResponse;
+import com.actisys.authservice.dto.LoginRequest;
+import com.actisys.authservice.dto.RegisterRequest;
+import com.actisys.authservice.exception.EmailAlreadyExistsException;
+import com.actisys.authservice.exception.InvalidCredentialsException;
+import com.actisys.authservice.exception.UserAlreadyExistsException;
+import com.actisys.authservice.model.AuthProvider;
+import com.actisys.authservice.model.Credential;
+import com.actisys.authservice.repository.AuthRepository;
+import com.actisys.authservice.service.AuthService;
+import com.actisys.authservice.util.JwtTokenProvider;
+import com.actisys.dto.UserDTO;
+import com.actisys.dto.CreateUserRequest;
+import com.actisys.exception.UserServiceException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AuthServiceImpl implements AuthService {
+    private final AuthRepository authRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserServiceClient userServiceClient;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JwtResponse register(RegisterRequest request) {
+        if (authRepository.existsByLogin(request.getNewUser().getLogin())) {
+            throw new UserAlreadyExistsException("User with login '" + request.getNewUser().getLogin()
+                    + "' already exists");
+        }
+        if (authRepository.existsByEmail(request.getNewUser().getEmail())) {
+            throw new EmailAlreadyExistsException("User with email '" + request.getNewUser().getEmail()
+                    + "' already exists");
+        }
+
+        UUID userId = UUID.randomUUID();
+        String login = request.getNewUser().getLogin();
+        String accessToken = jwtTokenProvider.generate(userId, login);
+        String refreshToken = null;
+
+        if (request.isRememberMe()) {
+            refreshToken = jwtTokenProvider.generateRefreshToken(userId, login);
+        }
+
+        Credential credential = Credential.builder()
+                .id(userId)
+                .login(login)
+                .password(passwordEncoder.encode(request.getPassword()))
+                .email(request.getNewUser().getEmail())
+                .refreshToken(refreshToken)
+                .authProvider(AuthProvider.LOCAL)
+                .build();
+
+        authRepository.save(credential);
+
+        UserDTO userForSave = UserDTO.builder()
+                .login(login)
+                .email(request.getNewUser().getEmail())
+                .fullName(request.getNewUser().getFullName())
+                .phone(request.getNewUser().getPhone())
+                .birthday(request.getNewUser().getBirthday())
+        .build();
+        CreateUserRequest userRequest = CreateUserRequest.builder()
+                .id(userId)
+                .user(userForSave)
+                .build();
+        try{
+            userServiceClient.createUser(userRequest);
+        } catch (UserServiceException e){
+            log.error(e.getMessage());
+            throw new UserServiceException(e.getMessage());
+        }
+
+
+        return new JwtResponse(accessToken, refreshToken);
+    }
+
+    @Override
+    @Transactional
+    public JwtResponse login(LoginRequest request) {
+        Credential credential;
+        if (request.getStr().contains("@")) {
+            credential = authRepository.findByEmail(request.getStr())
+                    .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
+        } else {
+            credential = authRepository.findByLogin(request.getStr())
+                    .orElseThrow(() -> new InvalidCredentialsException("Invalid login or password"));
+        }
+
+        if (!passwordEncoder.matches(request.getPassword(), credential.getPassword())) {
+            throw new InvalidCredentialsException("Invalid credentials");
+        }
+
+        String accessToken = jwtTokenProvider.generate(credential.getId(), credential.getLogin());
+        String refreshToken = null;
+
+        if (request.getRememberMe()) {
+            refreshToken = jwtTokenProvider.generateRefreshToken(credential.getId(), credential.getLogin());
+
+            credential.setRefreshToken(refreshToken);
+            authRepository.save(credential);
+        }
+
+        return new JwtResponse(accessToken, refreshToken);
+    }
+}

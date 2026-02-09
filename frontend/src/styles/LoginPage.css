@@ -1,0 +1,225 @@
+.login-page {
+    min-height: 100vh;
+    width: 100vw;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    padding: 20px;
+    margin: 0;
+    overflow: hidden;
+}
+
+.login-container {
+    display: flex;
+    width: 100%;
+    max-width: 1300px;
+    height: auto;
+    min-height: 550px;
+    max-height: 650px;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    margin: 0 auto;
+}
+
+/* Левая секция с информацией */
+.info-section {
+    flex: 1;
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: white;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.3;
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 35px;
+    color: white;
+    text-align: center;
+}
+
+.features h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.features li {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+}
+
+.features li:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(5px);
+}
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: #4cc9f0;
+    border-radius: 50%;
+    margin-right: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* Правая секция с формой */
+.form-section {
+    flex: 1;
+    padding: 30px 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #f8fafc;
+    height: 100%;
+    overflow-y: auto;
+    max-height: 650px;
+}
+
+/* Кастомный скроллбар для правой секции */
+.form-section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-section::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+
+.form-section::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    border-radius: 4px;
+    border: 2px solid #f1f5f9;
+}
+
+.form-section::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #3a56d4 0%, #2d0a8c 100%);
+    box-shadow: 0 0 8px rgba(67, 97, 238, 0.3);
+}
+
+.form-section::-webkit-scrollbar-button {
+    display: none;
+}
+
+.form-section {
+    scrollbar-width: thin;
+    scrollbar-color: #4361ee #f1f5f9;
+}
+
+.form-section:not(:hover)::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+}
+
+.form-section:hover::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    .login-page {
+        overflow-y: auto;
+        padding: 15px;
+    }
+
+    .login-container {
+        flex-direction: column;
+        max-height: none;
+        min-height: auto;
+        max-width: 550px;
+        overflow-y: auto;
+    }
+
+    .info-section {
+        padding: 25px 30px;
+        overflow: visible;
+    }
+
+    .form-section {
+        padding: 25px 30px;
+        overflow: visible;
+        max-height: none;
+        align-items: center;
+    }
+
+    .features h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .features li {
+        font-size: 14px;
+        margin-bottom: 12px;
+        padding: 8px 12px;
+    }
+
+    .logo h1 {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+}
+
+@media (max-width: 576px) {
+    .login-page {
+        padding: 10px;
+    }
+
+    .login-container {
+        border-radius: 12px;
+        max-width: 100%;
+    }
+
+    .info-section,
+    .form-section {
+        padding: 20px;
+    }
+
+    .form-section::-webkit-scrollbar {
+        display: none;
+    }
+
+    .form-section {
+        scrollbar-width: none;
+    }
+}
