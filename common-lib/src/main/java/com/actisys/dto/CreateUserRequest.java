@@ -6,10 +6,10 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class CreateUserRequest {
-    private final UUID id;
-    private final UserDTO user;
+    private UUID id;
+    private UserAddDTO user;
 }

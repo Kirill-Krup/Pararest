@@ -1,1 +1,22 @@
-spring.application.name=apigateway
+server:
+  port: 8080
+spring:
+  application:
+    name: apigateway
+  main:
+    web-application-type: reactive
+  profiles:
+    active: local
+
+jwt:
+  secret: ${JWT_SECRET}
+  ttl-seconds: 86400
+  issuer: actisys-auth
+  refresh-token-expire-mill: 604800000
+
+logging:
+  level:
+    com.actisys.apigateway.filter: DEBUG
+    com.actisys.apigateway.util: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

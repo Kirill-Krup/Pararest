@@ -7,12 +7,13 @@ import com.actisys.authservice.dto.RegisterRequest;
 import com.actisys.authservice.exception.EmailAlreadyExistsException;
 import com.actisys.authservice.exception.InvalidCredentialsException;
 import com.actisys.authservice.exception.UserAlreadyExistsException;
+import com.actisys.authservice.exception.UserNotFoundException;
 import com.actisys.authservice.model.AuthProvider;
 import com.actisys.authservice.model.Credential;
 import com.actisys.authservice.repository.AuthRepository;
 import com.actisys.authservice.service.AuthService;
 import com.actisys.authservice.util.JwtTokenProvider;
-import com.actisys.dto.UserDTO;
+import com.actisys.dto.UserAddDTO;
 import com.actisys.dto.CreateUserRequest;
 import com.actisys.exception.UserServiceException;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
 
         authRepository.save(credential);
 
-        UserDTO userForSave = UserDTO.builder()
+        UserAddDTO userForSave = UserAddDTO.builder()
                 .login(login)
                 .email(request.getNewUser().getEmail())
                 .fullName(request.getNewUser().getFullName())
@@ -76,12 +77,14 @@ public class AuthServiceImpl implements AuthService {
                 .user(userForSave)
                 .build();
         try{
+            log.info("Sending to userservice: {}", userRequest.getId());
+            log.info("User in request: {}", userRequest.getUser().getLogin());
             userServiceClient.createUser(userRequest);
         } catch (UserServiceException e){
             log.error(e.getMessage());
+            authRepository.delete(credential);
             throw new UserServiceException(e.getMessage());
         }
-
 
         return new JwtResponse(accessToken, refreshToken);
     }
@@ -89,14 +92,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public JwtResponse login(LoginRequest request) {
-        Credential credential;
-        if (request.getStr().contains("@")) {
-            credential = authRepository.findByEmail(request.getStr())
-                    .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
-        } else {
-            credential = authRepository.findByLogin(request.getStr())
-                    .orElseThrow(() -> new InvalidCredentialsException("Invalid login or password"));
-        }
+        Credential credential = authRepository.findByLogin(request.getLogin()).orElseThrow(
+                ()->new UserNotFoundException("No users with this credentials"));
 
         if (!passwordEncoder.matches(request.getPassword(), credential.getPassword())) {
             throw new InvalidCredentialsException("Invalid credentials");
@@ -113,5 +110,14 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return new JwtResponse(accessToken, refreshToken);
+    }
+
+    @Override
+    public JwtResponse refreshToken(UUID id) {
+        Credential credential = authRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("No credentials for this user"));
+        credential.setRefreshToken(jwtTokenProvider.generateRefreshToken(credential.getId(), credential.getLogin()));
+        return new JwtResponse(jwtTokenProvider.generate(credential.getId(), credential.getLogin()),
+                jwtTokenProvider.generateRefreshToken(credential.getId(), credential.getLogin()));
     }
 }

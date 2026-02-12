@@ -1,0 +1,148 @@
+.users-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.users-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    color: #1e1e2f;
+}
+
+.role-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.role-tabs button {
+    padding: 0.5rem 1.2rem;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.role-tabs button:hover {
+    background: #f0f2f5;
+}
+
+.role-tabs button.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.users-table th,
+.users-table td {
+    padding: 0.9rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #eef2f6;
+    vertical-align: middle;
+}
+
+.users-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.users-table tr.blocked-row {
+    background-color: #fff3f3;
+}
+
+.users-table td select {
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 0.9rem;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.status-badge.active {
+    background: #e3f7e3;
+    color: #27ae60;
+}
+
+.status-badge.blocked {
+    background: #ffe6e6;
+    color: #e74c3c;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.block-btn,
+.delete-btn {
+    padding: 0.3rem 0.8rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+.block-btn.block {
+    background: #f39c12;
+    color: white;
+}
+
+.block-btn.block:hover {
+    background: #e67e22;
+}
+
+.block-btn.unblock {
+    background: #27ae60;
+    color: white;
+}
+
+.block-btn.unblock:hover {
+    background: #229954;
+}
+
+.delete-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+}
+
+@media (max-width: 1200px) {
+    .users-table {
+        font-size: 0.85rem;
+    }
+    .users-table th,
+    .users-table td {
+        padding: 0.7rem 0.5rem;
+    }
+}

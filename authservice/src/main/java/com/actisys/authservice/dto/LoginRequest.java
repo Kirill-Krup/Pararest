@@ -1,14 +1,14 @@
 package com.actisys.authservice.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class LoginRequest {
-    private final String str;
-    private final String password;
-    private final Boolean rememberMe;
+    private String login;
+    private String password;
+    private Boolean rememberMe;
 }

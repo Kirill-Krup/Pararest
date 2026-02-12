@@ -2,14 +2,17 @@ import type { RegisterRequest, JwtResponse, LoginRequest } from '../models/auth.
 import type { ErrorResponse } from '../models/ErrorResponse.ts';
 import type { UserDTO } from '../models/UserDTO.ts';
 
-const API_BASE_URL = 'http://localhost:8080/api/v1/auth';
+const API_BASE_URL = 'http://localhost:8080';
+const GET_INFO_URL = '/api/v1/users/getInfo';
+const AUTH_ROUTES = '/api/v1/auth';
 
 class AuthService {
     async register(data: RegisterRequest): Promise<JwtResponse> {
-        const response = await fetch(`${API_BASE_URL}/register`, {
+        const response = await fetch(`${API_BASE_URL}${AUTH_ROUTES}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -17,14 +20,24 @@ class AuthService {
             throw new Error(error.message || 'Ошибка регистрации');
         }
 
-        return await response.json();
+        const jwtResponse: JwtResponse = await response.json();
+
+        if (jwtResponse.accessToken) {
+            this.setToken(jwtResponse.accessToken);
+        }
+        if (jwtResponse.refreshToken) {
+            this.setRefreshToken(jwtResponse.refreshToken);
+        }
+
+        return jwtResponse;
     }
 
     async login(data: LoginRequest): Promise<JwtResponse> {
-        const response = await fetch(`${API_BASE_URL}/login`, {
+        const response = await fetch(`${API_BASE_URL}${AUTH_ROUTES}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -32,7 +45,16 @@ class AuthService {
             throw new Error(error.message || 'Ошибка входа');
         }
 
-        return await response.json();
+        const jwtResponse: JwtResponse = await response.json();
+
+        if (jwtResponse.accessToken) {
+            this.setToken(jwtResponse.accessToken);
+        }
+        if (jwtResponse.refreshToken) {
+            this.setRefreshToken(jwtResponse.refreshToken);
+        }
+
+        return jwtResponse;
     }
 
     async getCurrentUser(): Promise<UserDTO> {
@@ -41,12 +63,13 @@ class AuthService {
             throw new Error('Токен не найден');
         }
 
-        const response = await fetch(`${API_BASE_URL}/me`, {
+        const response = await fetch(`${API_BASE_URL}${GET_INFO_URL}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -61,44 +84,103 @@ class AuthService {
     }
 
     async refreshToken(refreshToken: string): Promise<JwtResponse> {
-        const response = await fetch(`${API_BASE_URL}/refresh`, {
+        const response = await fetch(`${API_BASE_URL}${AUTH_ROUTES}/refresh`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ refreshToken })
+            body: JSON.stringify({ refreshToken }),
+            credentials: 'include'
         });
 
         if (!response.ok) {
             throw new Error('Не удалось обновить токен');
         }
 
-        return await response.json();
+        const jwtResponse: JwtResponse = await response.json();
+
+        if (jwtResponse.accessToken) {
+            this.setToken(jwtResponse.accessToken);
+        }
+        if (jwtResponse.refreshToken) {
+            this.setRefreshToken(jwtResponse.refreshToken);
+        }
+
+        return jwtResponse;
+    }
+
+    private setCookie(name: string, value: string, maxAgeSeconds: number = 86400): void {
+        const cookieValue = encodeURIComponent(value);
+        document.cookie = `${name}=${cookieValue}; path=/; max-age=${maxAgeSeconds}; SameSite=Lax`;
+        console.log(`Cookie set: ${name}=${value.substring(0, 20)}...`); // Для отладки
+    }
+
+    private getCookie(name: string): string | null {
+        const cookies = document.cookie.split('; ');
+        for (const cookie of cookies) {
+            const [cookieName, cookieValue] = cookie.split('=');
+            if (cookieName === name) {
+                return decodeURIComponent(cookieValue);
+            }
+        }
+        return null;
+    }
+
+    private removeCookie(name: string): void {
+        document.cookie = `${name}=; path=/; max-age=0; SameSite=Lax`;
     }
 
     setToken(token: string): void {
+
         localStorage.setItem('access_token', token);
-        document.cookie = `auth_token=${token}; path=/; max-age=86400; SameSite=Lax`;
+
+        this.setCookie('auth_token', token, 86400); // 24 часа
+        this.setCookie('access_token', token, 86400);
+
+
     }
 
     setRefreshToken(token: string): void {
+
         localStorage.setItem('refresh_token', token);
+        this.setCookie('refresh_token', token, 604800); // 7 дней
+
+        console.log('Refresh token saved to localStorage and cookies'); // Для отладки
     }
 
     removeTokens(): void {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        document.cookie = 'auth_token=; path=/; max-age=0;';
+
+        this.removeCookie('auth_token');
+        this.removeCookie('access_token');
+        this.removeCookie('refresh_token');
+
+        console.log('Tokens removed');
     }
 
     getToken(): string | null {
-        return localStorage.getItem('access_token') ||
-            document.cookie
-                .split('; ')
-                .find(row => row.startsWith('auth_token='))
-                ?.split('=')[1] || null;
+        const cookieToken = this.getCookie('auth_token') || this.getCookie('access_token');
+        if (cookieToken) {
+            return cookieToken;
+        }
+
+        return localStorage.getItem('access_token');
     }
 
     getRefreshToken(): string | null {
+        const cookieRefreshToken = this.getCookie('refresh_token');
+        if (cookieRefreshToken) {
+            return cookieRefreshToken;
+        }
+
         return localStorage.getItem('refresh_token');
+    }
+
+    checkStoredTokens(): void {
+        console.log('=== Token Storage Check ===');
+        console.log('LocalStorage access_token:', localStorage.getItem('access_token') ? 'Present' : 'Not found');
+        console.log('LocalStorage refresh_token:', localStorage.getItem('refresh_token') ? 'Present' : 'Not found');
+        console.log('Cookies:', document.cookie || 'No cookies');
+        console.log('===========================');
     }
 }
 

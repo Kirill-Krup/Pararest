@@ -1,90 +1,68 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext.tsx";
 import UserDropdown from "../Header/UserDropdown.tsx";
-import "../../../styles/layout/Header/UserDropdown.css";
+import "../../../styles/layout/Header/Header.css";
 
 const Header: React.FC = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-        };
+        const handleScroll = () => setIsScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const scrollToSection = (sectionId: string) => {
-        if (window.location.pathname === '/') {
-            const element = document.getElementById(sectionId);
+    useEffect(() => {
+        if (location.hash) {
+            const id = location.hash.replace('#', '');
+            const element = document.getElementById(id);
             if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }, 0);
             }
+        }
+    }, [location]);
+
+    const isHomePage = location.pathname === '/' || location.pathname==='/home';
+
+    const handleNavClick = (e: React.MouseEvent, sectionId: string) => {
+        e.preventDefault();
+        if (isHomePage) {
+            const element = document.getElementById(sectionId);
+            element?.scrollIntoView({ behavior: 'smooth' });
+            window.history.pushState(null, '', `/#${sectionId}`);
         } else {
-            navigate(`/#${sectionId}`);
+            navigate(`#${sectionId}`);
         }
     };
 
     return (
-        <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
+        <header className={`header ${isScrolled ? 'scrolled' : ''} ${!isHomePage ? 'always-solid' : ''}`}>
             <div className="header-container">
-                <div className="logo">
-                    <Link to={"/"}>
-                        <h1>Pararest</h1>
-                        <span className="tagline">Restaurant & Hotel</span>
-                    </Link>
-                </div>
+                <Link to="/" className="logo-section">
+                    <span className="logo-text">PARAREST</span>
+                    <span className="logo-dot">.</span>
+                </Link>
 
-                <nav className="nav">
-                    <button
-                        className="nav-link"
-                        onClick={() => scrollToSection('hero')}
-                    >
-                        Главная
-                    </button>
-
-                    <button
-                        className="nav-link"
-                        onClick={() => navigate('/reservation')}
-                    >
-                        Бронирование
-                    </button>
-
-                    <button
-                        className="nav-link"
-                        onClick={() => scrollToSection('menu')}
-                    >
-                        Меню
-                    </button>
-
-                    <button
-                        className="nav-link"
-                        onClick={() => scrollToSection('about')}
-                    >
-                        О нас
-                    </button>
+                <nav className="nav-menu">
+                    <button onClick={(e) => handleNavClick(e, 'hero')} className="nav-item">Главная</button>
+                    <button onClick={() => navigate('/reservation')} className="nav-item">Бронирование</button>
+                    <button onClick={(e) => handleNavClick(e, 'menu')} className="nav-item">Меню</button>
+                    <button onClick={(e) => handleNavClick(e, 'about')} className="nav-item">О нас</button>
                 </nav>
 
-                <div className="header-right">
+                <div className="header-actions">
                     {isAuthenticated ? (
                         <UserDropdown />
                     ) : (
-                        <div className="auth-buttons">
-                            <button
-                                className="btn btn-login"
-                                onClick={() => navigate('/login')}
-                            >
-                                Войти
-                            </button>
-                            <button
-                                className="btn btn-register"
-                                onClick={() => navigate('/register')}
-                            >
-                                Регистрация
-                            </button>
+                        <div className="auth-group">
+                            <button className="link-btn" onClick={() => navigate('/login')}>Войти</button>
+                            <button className="primary-btn" onClick={() => navigate('/register')}>Присоединиться</button>
                         </div>
                     )}
                 </div>

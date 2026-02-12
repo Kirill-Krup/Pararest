@@ -1,9 +1,10 @@
 package com.actisys.apigateway.filter;
 
-import com.actisys.authservice.util.JwtTokenProvider;
+import com.actisys.apigateway.util.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -18,9 +19,9 @@ import reactor.core.publisher.Mono;
 
 
 @Component
+@Slf4j
 public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
-  private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
   private final JwtTokenProvider tokenProvider;
 
   public JwtAuthenticationFilter(JwtTokenProvider tokenProvider) {
@@ -39,11 +40,6 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
       return chain.filter(exchange);
     }
 
-    if (isStaticResource(path)) {
-      log.debug("Static resource, skipping JWT validation: {}", path);
-      return chain.filter(exchange);
-    }
-
     String token = extractTokenFromCookie(exchange);
 
     if (token == null) {
@@ -57,12 +53,15 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
       Claims claims = jws.getPayload();
 
       String username = extractUsername(claims);
-      log.info("Authenticated user: {} (ID: {}) with roles: {}", username);
+      String userId = extractUserId(claims);
+
+      log.info("Authenticated user: {} (ID: {})", username, userId);
 
       ServerHttpRequest mutatedRequest = request.mutate()
-          .header("X-Username", username)
-          .header("Authorization", "Bearer " + token)
-          .build();
+              .header("X-Username", username)
+              .header("X-User-Id", userId)
+              .header("Authorization", "Bearer " + token)
+              .build();
 
       return chain.filter(exchange.mutate().request(mutatedRequest).build());
 
@@ -70,11 +69,18 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
       log.warn("JWT validation failed for path {}: {}", path, ex.getMessage());
       exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
       return exchange.getResponse().setComplete();
-    } catch (Exception ex) {
-      log.error("Error during JWT authentication for path {}: {}", path, ex.getMessage(), ex);
-      exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-      return exchange.getResponse().setComplete();
     }
+  }
+
+  private String extractUserId(Claims claims) {
+    String userId = claims.get("userId", String.class);
+    if (userId == null) {
+      userId = claims.get("sub", String.class); // subject
+    }
+    if (userId == null) {
+      userId = claims.getSubject();
+    }
+    return userId;
   }
 
   private String extractTokenFromCookie(ServerWebExchange exchange) {
@@ -100,16 +106,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
   private boolean isPublicEndpoint(String path) {
     return path.startsWith("/api/v1/auth/login") ||
-        path.startsWith("/api/v1/auth/register") ||
-        path.startsWith("/api/v1/tariffs/allTariffs");
-  }
-
-  private boolean isStaticResource(String path) {
-    return path.startsWith("/static/") ||
-        path.startsWith("/html/") ||
-        path.startsWith("/css/") ||
-        path.startsWith("/js/") ||
-        path.equals("/");
+        path.startsWith("/api/v1/auth/register") ;
   }
 
   @Override

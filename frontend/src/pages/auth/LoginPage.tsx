@@ -6,7 +6,7 @@ import '../../styles/auth/LoginPage.css'
 const LoginPage: React.FC=()=>{
     const navigate = useNavigate();
     const handleLoginSuccess=()=>{
-        navigate('/homePage')
+        navigate('/home')
     }
     return (
         <div className="login-page">
@@ -22,15 +22,15 @@ const LoginPage: React.FC=()=>{
                         <h2>Почему выбирают нас?</h2>
                         <ul>
                             <li>
-                                <span className="icon">✓</span>
+                                <span className="icon"></span>
                                 Готовим на огне
                             </li>
                             <li>
-                                <span className="icon">✓</span>
+                                <span className="icon"></span>
                                 Натуральные фермерские продукты
                             </li>
                             <li>
-                                <span className="icon">✓</span>
+                                <span className="icon"></span>
                                 Вкусная еда
                             </li>
                         </ul>

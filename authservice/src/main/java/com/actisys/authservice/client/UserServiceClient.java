@@ -2,7 +2,6 @@ package com.actisys.authservice.client;
 
 
 import com.actisys.dto.CreateUserRequest;
-import com.actisys.dto.UserDTO;
 import com.actisys.exception.UserServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

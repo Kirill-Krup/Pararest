@@ -2,13 +2,13 @@ package com.actisys.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor(force = true)
 public class ErrorResponse {
     private final String errorM;
     private final String errorMessage;

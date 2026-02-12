@@ -1,9 +1,21 @@
+export enum UserRole {
+    USER = "USER",
+    ADMIN = "ADMIN",
+    MANAGER = "MANAGER",
+    EMPLOYEE = "EMPLOYEE"
+}
 
 export interface UserDTO{
-    id: number,
+    id: string,
     login: string,
-    email: string,
-    wallet: number,
     fullName: string,
-    avatar: string
+    email: string,
+    phone: string,
+    birthday: string,
+    wallet: number,
+    role: UserRole,
+    roomNumber:number | null,
+    blocked:boolean
 }
+
+

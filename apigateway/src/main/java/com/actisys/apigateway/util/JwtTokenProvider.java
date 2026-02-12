@@ -1,8 +1,9 @@
-package com.actisys.authservice.util;
+package com.actisys.apigateway.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
   @Value("${jwt.secret}")
@@ -64,7 +66,6 @@ public class JwtTokenProvider {
     return generate(userId, username, null);
   }
 
-
   public Jws<Claims> verify(String token) {
     return Jwts.parser()
             .verifyWith(key)
@@ -72,24 +73,10 @@ public class JwtTokenProvider {
             .parseSignedClaims(token);
   }
 
-
-  public String generateRefreshToken(UUID userId, String username) {
-    Date now = new Date();
-    return Jwts.builder()
-            .setSubject(userId.toString())
-            .claim("username", username)
-            .claim("type", "refresh")
-            .setIssuedAt(now)
-            .setExpiration(new Date(now.getTime() + refreshTokenExpireMill))
-            .signWith(key, SignatureAlgorithm.HS256)
-            .compact();
-  }
-
   public UUID extractUserId(String token) {
     Claims claims = verify(token).getPayload();
     String userIdStr = claims.get("userId", String.class);
     if (userIdStr == null) {
-      // Fallback на subject для refresh токенов
       userIdStr = claims.getSubject();
     }
     return UUID.fromString(userIdStr);

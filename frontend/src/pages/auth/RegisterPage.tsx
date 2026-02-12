@@ -7,7 +7,7 @@ const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleRegistrationSuccess = () => {
-    navigate('/homePage');
+    navigate('/home');
   };
 
   return (
@@ -24,15 +24,15 @@ const RegisterPage: React.FC = () => {
             <h2>Почему выбирают нас?</h2>
             <ul>
               <li>
-                <span className="icon">✓</span>
+                <span className="icon"></span>
                 Готовим на огне
               </li>
               <li>
-                <span className="icon">✓</span>
+                <span className="icon"></span>
                 Натуральные фермерские продукты
               </li>
               <li>
-                <span className="icon">✓</span>
+                <span className="icon"></span>
                 Вкусная еда
               </li>
             </ul>
