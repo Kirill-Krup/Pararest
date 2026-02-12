@@ -27,7 +27,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(CreateUserRequest createUserRequest) {
-        log.info("register user" + createUserRequest.getId());
         User user = User.builder()
                 .id(createUserRequest.getId())
                 .login(createUserRequest.getUser().getLogin())
@@ -53,5 +52,25 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> getAll() {
         List<User> users = userRepository.findAll();
         return users.stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDTO changeRole(UUID id, UserRole role) {
+        User user = userRepository.findById(id).orElseThrow(()->new UserNotFoundException(id));
+        user.setRole(role);
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDTO handleAccess(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(userId));
+        user.setBlocked(!user.getBlocked());
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    @Override
+    public void deleteUser(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(userId));
+        userRepository.delete(user);
     }
 }

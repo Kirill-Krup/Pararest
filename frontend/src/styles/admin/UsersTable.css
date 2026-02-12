@@ -1,148 +1,318 @@
 .users-section {
     background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    transition: box-shadow 0.2s ease;
 }
 
-.users-section h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
+.users-section:hover {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+
+.users-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.users-header h2 {
     font-size: 1.6rem;
-    color: #1e1e2f;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.refresh-btn {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 40px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.refresh-btn:hover {
+    background: white;
+    border-color: #94a3b8;
+    color: #0f172a;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .role-tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    gap: 10px;
+    margin-bottom: 28px;
 }
 
 .role-tabs button {
-    padding: 0.5rem 1.2rem;
-    border: 1px solid #ddd;
-    background: white;
-    border-radius: 30px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 40px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #475569;
     cursor: pointer;
-    font-size: 0.9rem;
     transition: all 0.2s;
 }
 
 .role-tabs button:hover {
-    background: #f0f2f5;
+    background: #e2e8f0;
+    color: #0f172a;
 }
 
 .role-tabs button.active {
-    background: #3498db;
+    background: #2563eb;
     color: white;
-    border-color: #3498db;
+    border-color: #2563eb;
 }
 
 .table-responsive {
     overflow-x: auto;
+    border-radius: 14px;
+    border: 1px solid #f1f5f9;
 }
+
 
 .users-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
-}
-
-.users-table th,
-.users-table td {
-    padding: 0.9rem 0.8rem;
-    text-align: left;
-    border-bottom: 1px solid #eef2f6;
-    vertical-align: middle;
+    background: white;
 }
 
 .users-table th {
     background: #f8fafc;
+    color: #1e293b;
     font-weight: 600;
-    color: #2c3e50;
+    padding: 16px 12px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 2px solid #e2e8f0;
 }
 
-.users-table tr.blocked-row {
-    background-color: #fff3f3;
+.users-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: middle;
 }
 
-.users-table td select {
-    padding: 0.3rem 0.6rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+.users-table tbody tr:hover {
+    background-color: #fafcff;
+    transition: background 0.15s;
+}
+
+/* Blocked row styling */
+.users-table .blocked-row {
+    background-color: #fffbfa;
+    opacity: 0.85;
+}
+
+.users-table .blocked-row td {
+    color: #64748b;
+}
+
+/* Zero wallet */
+.zero-wallet {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.role-select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
     background: white;
     font-size: 0.9rem;
+    color: #1e293b;
+    cursor: pointer;
+    outline: none;
+    transition: border 0.15s, box-shadow 0.15s;
+}
+
+.role-select:hover {
+    border-color: #94a3b8;
+}
+
+.role-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .status-badge {
-    display: inline-block;
-    padding: 0.25rem 0.7rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.85rem;
     font-weight: 500;
-    text-align: center;
+    white-space: nowrap;
 }
 
 .status-badge.active {
-    background: #e3f7e3;
-    color: #27ae60;
+    background: #e6f7e6;
+    color: #0b5e42;
 }
 
 .status-badge.blocked {
-    background: #ffe6e6;
-    color: #e74c3c;
+    background: #fee9e7;
+    color: #b91c1c;
 }
 
 .action-buttons {
     display: flex;
-    gap: 0.5rem;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .block-btn,
 .delete-btn {
-    padding: 0.3rem 0.8rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     cursor: pointer;
-    font-size: 0.8rem;
-    transition: 0.2s;
-    white-space: nowrap;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.block-btn:active,
+.delete-btn:active {
+    transform: translateY(1px);
 }
 
 .block-btn.block {
-    background: #f39c12;
-    color: white;
+    background: #fff3e0;
+    color: #b45309;
+    border-color: #fed7aa;
 }
 
 .block-btn.block:hover {
-    background: #e67e22;
+    background: #ffedd5;
 }
 
 .block-btn.unblock {
-    background: #27ae60;
-    color: white;
+    background: #e6f7e6;
+    color: #0b5e42;
+    border-color: #bbf7d0;
 }
 
 .block-btn.unblock:hover {
-    background: #229954;
+    background: #d1fae5;
 }
 
 .delete-btn {
-    background: #e74c3c;
-    color: white;
+    background: #fee2e2;
+    color: #b91c1c;
+    border-color: #fecaca;
 }
 
 .delete-btn:hover {
-    background: #c0392b;
+    background: #fecaca;
 }
 
-@media (max-width: 1200px) {
-    .users-table {
+.empty-message {
+    text-align: center;
+    padding: 48px 20px;
+    color: #64748b;
+    font-style: italic;
+}
+
+.users-section.loading,
+.users-section.error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 260px;
+    text-align: center;
+    color: #475569;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    color: #b91c1c;
+    margin-bottom: 16px;
+}
+
+.retry-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 24px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.retry-btn:hover {
+    background: #1d4ed8;
+}
+
+.table-footer {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 0.9rem;
+    color: #64748b;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+}
+
+@media (max-width: 768px) {
+    .users-section {
+        padding: 20px 16px;
+    }
+
+    .users-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .role-tabs button {
+        padding: 8px 16px;
         font-size: 0.85rem;
     }
+
     .users-table th,
     .users-table td {
-        padding: 0.7rem 0.5rem;
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
     }
 }

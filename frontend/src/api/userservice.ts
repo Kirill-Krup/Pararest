@@ -24,7 +24,10 @@ export const userService = {
 
     async changeUserRole(userId: string, role: UserRole): Promise<UserDTO> {
         try {
-            const response = await api.put<UserDTO>(`/users/changeRole/${userId}`, { role });
+            const response = await api.put<UserDTO>(`/users/changeRole/${userId}`,
+                role,
+                {headers: {'Content-Type': 'application/json'} }
+                );
             return response.data;
         } catch (error) {
             console.error('Ошибка при изменении роли:', error);
@@ -34,7 +37,7 @@ export const userService = {
 
     async toggleUserBlock(userId: string): Promise<UserDTO> {
         try {
-            const response = await api.patch<UserDTO>(`/users/handleAccess/${userId}`);
+            const response = await api.put<UserDTO>(`/users/handleAccess/${userId}`);
             return response.data;
         } catch (error) {
             console.error('Ошибка при изменении статуса блокировки:', error);

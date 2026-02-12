@@ -2,8 +2,10 @@ package com.actisys.userservice.controller;
 
 import com.actisys.dto.CreateUserRequest;
 import com.actisys.userservice.dto.UserDTO;
+import com.actisys.userservice.model.UserRole;
 import com.actisys.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,5 +36,26 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> getAll(){
         return ResponseEntity.ok().body(userService.getAll());
     }
+
+    @PutMapping("/changeRole/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> changeRole(@PathVariable UUID userId, @RequestBody UserRole role){
+        return ResponseEntity.ok().body(userService.changeRole(userId,role));
+    }
+
+    @PutMapping("/handleAccess/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> handleAccess(@PathVariable UUID userId){
+        return ResponseEntity.ok().body(userService.handleAccess(userId));
+    }
+
+    @DeleteMapping("/deleteUser/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID userId){
+        userService.deleteUser(userId);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import '../styles/admin/AdminPage.css';
 import AdminHeader from "../components/layout/Header/AdminHeader.tsx";
 import UsersTable from "../components/admin/UsersTable.tsx";
+import MenuTable from "../components/admin/MenuTable.tsx";
 
 const AdminPage: React.FC = () => {
     return (
@@ -12,10 +13,10 @@ const AdminPage: React.FC = () => {
                 <section className="admin-section">
                     <UsersTable />
                 </section>
-                {/*<section className="admin-section">
+                <section className="admin-section">
                     <MenuTable />
                 </section>
-                <section className="admin-section">
+                {/*<section className="admin-section">
                     <OrdersTable />
                 </section>
                 <section className="admin-section">

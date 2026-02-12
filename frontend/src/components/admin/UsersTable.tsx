@@ -180,7 +180,7 @@ const UsersTable: React.FC = () => {
                                 <td>{user.roomNumber ?? '—'}</td>
                                 <td>
                                         <span className={`status-badge ${user.blocked ? 'blocked' : 'active'}`}>
-                                            {user.blocked ? '🔒 Заблокирован' : '✅ Активен'}
+                                            {user.blocked ? '🔒 Заблокирован' : 'Активен'}
                                         </span>
                                 </td>
                                 <td>
