@@ -1,0 +1,53 @@
+package com.actisys.inventoryservice.service.impl;
+
+import com.actisys.inventoryservice.dto.AddIngredientDTO;
+import com.actisys.inventoryservice.dto.IngredientDTO;
+import com.actisys.inventoryservice.mapper.IngredientMapper;
+import com.actisys.inventoryservice.model.Ingredient;
+import com.actisys.inventoryservice.repository.IngredientRepository;
+import com.actisys.inventoryservice.service.IngredientService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class IngredientServiceImpl implements IngredientService {
+
+    private final IngredientRepository ingredientRepository;
+    private final IngredientMapper ingredientMapper;
+
+    @Override
+    public List<IngredientDTO> getAll() {
+        List<Ingredient> all = ingredientRepository.findAll();
+        return all.stream().map(ingredientMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public IngredientDTO addNewIngredient(AddIngredientDTO ingredient) {
+        Ingredient newIngredient = Ingredient.builder()
+                .name(ingredient.getName())
+                .unit(ingredient.getUnit())
+                .currentStock(ingredient.getCurrentStock())
+                .minStock(ingredient.getMinStock())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        return ingredientMapper.toDto(ingredientRepository.save(newIngredient));
+    }
+
+    @Override
+    public void deleteIngredient(Long id) {
+        Ingredient ingredient = ingredientRepository.findById(id).orElseThrow(
+                ()->new RuntimeException("Ingredient not found"));
+        ingredientRepository.delete(ingredient);
+    }
+
+    @Override
+    public void pickUpIngredients(HashMap<Long, Integer> ingredients) {
+
+    }
+}

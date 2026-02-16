@@ -1,0 +1,83 @@
+.admin-navbar {
+    width: 250px;
+    height: 100vh;
+    background: linear-gradient(180deg, #2c3e50 0%, #1a2632 100%);
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.admin-navbar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.admin-navbar-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #ecf0f1;
+}
+
+.admin-navbar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-navbar-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.admin-navbar-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: #3498db;
+}
+
+.admin-navbar-item.active {
+    background: rgba(52, 152, 219, 0.2);
+    border-left-color: #3498db;
+}
+
+.admin-navbar-icon {
+    margin-right: 12px;
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+.admin-navbar-label {
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    .admin-navbar {
+        width: 70px;
+    }
+
+    .admin-navbar-header h3,
+    .admin-navbar-label {
+        display: none;
+    }
+
+    .admin-navbar-icon {
+        margin-right: 0;
+        font-size: 1.5rem;
+    }
+
+    .admin-navbar-item {
+        justify-content: center;
+        padding: 15px;
+    }
+}

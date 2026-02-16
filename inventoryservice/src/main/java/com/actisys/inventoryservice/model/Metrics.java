@@ -1,4 +1,5 @@
 package com.actisys.inventoryservice.model;
 
-public class InventoryItem {
+public enum Metrics {
+    KG, G, TH, L, ML
 }

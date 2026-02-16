@@ -31,19 +31,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
-    const loadUser = async (): Promise<void> => {
+    const loadUser = async (): Promise<UserDTO | null> => {
         try {
             const userData = await authService.getCurrentUser();
             setUser(userData);
+            return userData;
         } catch (error) {
-            console.error('Failed to load user:', error);
             setUser(null);
+            return null;
         }
     };
 
     const redirectByRole = (role: string) => {
         const route = roleRoutes[role] || '/home';
-        navigate(route, { replace: true });
+        if (window.location.pathname !== route) {
+            navigate(route, { replace: true });
+        }
     };
 
     useEffect(() => {
@@ -65,10 +68,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         if (user?.role && !isLoading) {
-            const currentPath = window.location.pathname;
-            if (currentPath !== '/login' && currentPath !== '/register') {
-                return;
-            }
             redirectByRole(user.role);
         }
     }, [user, isLoading]);
@@ -77,7 +76,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsLoading(true);
         try {
             await authService.login(data);
-            await loadUser();
+            const userData = await loadUser();
+            if (userData) {
+                redirectByRole(userData.role);
+            }
         } catch (error) {
             throw error;
         } finally {
@@ -89,7 +91,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsLoading(true);
         try {
             await authService.register(data);
-            await loadUser();
+            const userData = await loadUser();
+            if (userData) {
+                redirectByRole(userData.role);
+            }
         } catch (error) {
             throw error;
         } finally {
@@ -115,11 +120,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (!refreshToken) {
                 throw new Error('Refresh token not found');
             }
-
             await authService.refreshToken(refreshToken);
             await loadUser();
         } catch (error) {
-            console.error('Token refresh failed:', error);
             logout();
         }
     };

@@ -1,26 +1,22 @@
-import React, {useState} from "react";
-import type {LoginRequest} from "../../models/auth.types.ts";
-import authservice from "../../api/authservice.ts";
-import '../../styles/auth/LoginForm.css'
+import React, { useState } from "react";
+import { useAuth } from "../../context/AuthContext.tsx";
+import type { LoginRequest } from "../../models/auth.types.ts";
+import '../../styles/auth/LoginForm.css';
 
-interface LoginFormProps {
-    onSuccess?: () => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({onSuccess}) => {
+const LoginForm: React.FC = () => {
+    const { login } = useAuth();
     const [formData, setFormData] = useState<LoginRequest>({
         login: '',
         password: '',
-        rememberMe:false
+        rememberMe: false
     });
 
     const [isLoading, setIsLoading] = useState(false);
-
     const [error, setError] = useState<string | null>(null);
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value, type, checked} = e.target;
+        const { name, value, type, checked } = e.target;
 
         setFormData(prev => ({
             ...prev,
@@ -29,7 +25,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onSuccess}) => {
 
         if (fieldErrors[name]) {
             setFieldErrors(prev => {
-                const newErrors = {...prev};
+                const newErrors = { ...prev };
                 delete newErrors[name];
                 return newErrors;
             });
@@ -37,44 +33,32 @@ const LoginForm: React.FC<LoginFormProps> = ({onSuccess}) => {
     };
 
     const validate = (): boolean => {
-        const errors: Record<string, string>={};
-        if(!formData.login.trim()){
-            errors.login = 'Login is required'
-        }else if(formData.login.length<3){
-            errors.login = 'Login must be at least 3 characters'
+        const errors: Record<string, string> = {};
+        if (!formData.login.trim()) {
+            errors.login = 'Login is required';
+        } else if (formData.login.length < 3) {
+            errors.login = 'Login must be at least 3 characters';
         }
-        if(!formData.password.trim()){
-            errors.login = 'Password is required'
+        if (!formData.password.trim()) {
+            errors.password = 'Password is required';
         }
         setFieldErrors(errors);
-        return Object.keys(errors).length===0;
-    }
+        return Object.keys(errors).length === 0;
+    };
 
-    const prepareRequestData=():LoginRequest=>{
-        return {
-            login: formData.login,
-            password: formData.password,
-            rememberMe:formData.rememberMe
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validate()) {
+            return;
         }
-    }
-
-    const handleSubmit = async (e:React.FormEvent)=>{
-        e.preventDefault()
-        if(!validate()){
-            return
-        }
+        
         setIsLoading(true);
         setError(null);
 
-        try{
-            const requestData = prepareRequestData();
-            const response = await authservice.login(requestData);
-            if(onSuccess){
-                onSuccess();
-            }
-            console.log('Registration successful:', response);
+        try {
+            await login(formData);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Registration failed');
+            setError(err instanceof Error ? err.message : 'Login failed');
         } finally {
             setIsLoading(false);
         }
@@ -84,14 +68,12 @@ const LoginForm: React.FC<LoginFormProps> = ({onSuccess}) => {
         <form onSubmit={handleSubmit} className="login-form">
             <h2>Вход</h2>
 
-            {}
             {error && (
                 <div className="error-message">
                     {error}
                 </div>
             )}
 
-            {}
             <div className="form-group">
                 <label htmlFor="login">Логин *</label>
                 <input
@@ -107,7 +89,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onSuccess}) => {
                     <span className="field-error">{fieldErrors.login}</span>
                 )}
             </div>
-            {}
+
             <div className="form-group">
                 <label htmlFor="password">Пароль *</label>
                 <input
@@ -123,7 +105,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onSuccess}) => {
                     <span className="field-error">{fieldErrors.password}</span>
                 )}
             </div>
-            {}
+
             <div className="form-group checkbox">
                 <label>
                     <input
@@ -136,7 +118,6 @@ const LoginForm: React.FC<LoginFormProps> = ({onSuccess}) => {
                 </label>
             </div>
 
-            {}
             <button
                 type="submit"
                 disabled={isLoading}
@@ -145,12 +126,11 @@ const LoginForm: React.FC<LoginFormProps> = ({onSuccess}) => {
                 {isLoading ? 'Вход...' : 'Войти'}
             </button>
 
-            {}
             <p className="login-link">
                 Ещё нет аккаунта? <a href="/register">Зарегистрироваться</a>
             </p>
         </form>
     );
-}
+};
 
 export default LoginForm;

@@ -110,7 +110,6 @@ class AuthService {
     private setCookie(name: string, value: string, maxAgeSeconds: number = 86400): void {
         const cookieValue = encodeURIComponent(value);
         document.cookie = `${name}=${cookieValue}; path=/; max-age=${maxAgeSeconds}; SameSite=Lax`;
-        console.log(`Cookie set: ${name}=${value.substring(0, 20)}...`); // Для отладки
     }
 
     private getCookie(name: string): string | null {
@@ -129,32 +128,22 @@ class AuthService {
     }
 
     setToken(token: string): void {
-
         localStorage.setItem('access_token', token);
-
-        this.setCookie('auth_token', token, 86400); // 24 часа
+        this.setCookie('auth_token', token, 86400);
         this.setCookie('access_token', token, 86400);
-
-
     }
 
     setRefreshToken(token: string): void {
-
         localStorage.setItem('refresh_token', token);
-        this.setCookie('refresh_token', token, 604800); // 7 дней
-
-        console.log('Refresh token saved to localStorage and cookies'); // Для отладки
+        this.setCookie('refresh_token', token, 604800);
     }
 
     removeTokens(): void {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-
         this.removeCookie('auth_token');
         this.removeCookie('access_token');
         this.removeCookie('refresh_token');
-
-        console.log('Tokens removed');
     }
 
     getToken(): string | null {
@@ -162,7 +151,6 @@ class AuthService {
         if (cookieToken) {
             return cookieToken;
         }
-
         return localStorage.getItem('access_token');
     }
 
@@ -171,16 +159,7 @@ class AuthService {
         if (cookieRefreshToken) {
             return cookieRefreshToken;
         }
-
         return localStorage.getItem('refresh_token');
-    }
-
-    checkStoredTokens(): void {
-        console.log('=== Token Storage Check ===');
-        console.log('LocalStorage access_token:', localStorage.getItem('access_token') ? 'Present' : 'Not found');
-        console.log('LocalStorage refresh_token:', localStorage.getItem('refresh_token') ? 'Present' : 'Not found');
-        console.log('Cookies:', document.cookie || 'No cookies');
-        console.log('===========================');
     }
 }
 
