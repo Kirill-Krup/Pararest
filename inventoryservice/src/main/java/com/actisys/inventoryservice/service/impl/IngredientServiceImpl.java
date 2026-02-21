@@ -2,6 +2,7 @@ package com.actisys.inventoryservice.service.impl;
 
 import com.actisys.inventoryservice.dto.AddIngredientDTO;
 import com.actisys.inventoryservice.dto.IngredientDTO;
+import com.actisys.inventoryservice.exception.IngredientNotFoundException;
 import com.actisys.inventoryservice.mapper.IngredientMapper;
 import com.actisys.inventoryservice.model.Ingredient;
 import com.actisys.inventoryservice.repository.IngredientRepository;
@@ -42,7 +43,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public void deleteIngredient(Long id) {
         Ingredient ingredient = ingredientRepository.findById(id).orElseThrow(
-                ()->new RuntimeException("Ingredient not found"));
+                ()->new IngredientNotFoundException(id));
         ingredientRepository.delete(ingredient);
     }
 

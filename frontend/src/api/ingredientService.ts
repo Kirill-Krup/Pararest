@@ -42,7 +42,6 @@ export const ingredientService = {
         }
     },
 
-    // Поставки
     async getAllSupplies(): Promise<SupplyDTO[]> {
         try {
             const response = await api.get<SupplyDTO[]>('/supplies/getAll');

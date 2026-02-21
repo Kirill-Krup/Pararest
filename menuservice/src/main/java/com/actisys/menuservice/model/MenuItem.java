@@ -47,7 +47,4 @@ public class MenuItem {
     @Column(name = "adder_name", nullable = false)
     private String adderName;
 
-    @Column(name = "recipe_id")
-    private Long recipeId;
-
 }
