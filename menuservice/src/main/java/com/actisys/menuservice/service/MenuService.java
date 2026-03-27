@@ -9,11 +9,15 @@ import java.util.List;
 public interface MenuService {
     List<MenuItemDTO> getAllMenu();
 
-    MenuItemDTO addNewMenuItem(AddMenuItemDTO newMenuItemDTO);
+    Long addNewMenuItem(String userName, AddMenuItemDTO newMenuItemDTO);
 
     MenuItemDTO editMenuItem(Long id, MenuItemDTO menuItemDTO);
 
     MenuItemDTO editAvailability(Long id);
 
     void deleteMenuItem(Long id);
+
+    MenuItemDTO addNewMenuItemNoRecipe(String userName, AddMenuItemDTO newMenuItemDTO);
+
+    List<MenuItemDTO> getMenuItemsByIds(List<Long> menuIds);
 }

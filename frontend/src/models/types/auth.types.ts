@@ -1,4 +1,4 @@
-import type { UserAddDTO } from "./UserAddDTO.ts";
+import type { UserAddDTO } from "../UserAddDTO.ts";
 
 export interface JwtResponse{
     accessToken:string,

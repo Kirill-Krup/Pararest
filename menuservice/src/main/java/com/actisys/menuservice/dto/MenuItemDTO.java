@@ -2,7 +2,6 @@ package com.actisys.menuservice.dto;
 
 import lombok.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,9 +14,6 @@ public class MenuItemDTO {
     private String description;
     private BigDecimal price;
     private CategoryDTO category;
-    private Boolean active;
     private String imageUrl;
     private Integer preparationTime;
-    private LocalDateTime updatedAt;
-    private String adderName;
 }

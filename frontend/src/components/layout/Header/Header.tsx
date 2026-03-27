@@ -37,7 +37,7 @@ const Header: React.FC = () => {
             element?.scrollIntoView({ behavior: 'smooth' });
             window.history.pushState(null, '', `/#${sectionId}`);
         } else {
-            navigate(`#${sectionId}`);
+            navigate(`/home#${sectionId}`);
         }
     };
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext.tsx";
-import type { LoginRequest } from "../../models/auth.types.ts";
+import type { LoginRequest } from "../../models/types/auth.types.ts";
 import '../../styles/auth/LoginForm.css';
 
 const LoginForm: React.FC = () => {

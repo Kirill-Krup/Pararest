@@ -2,7 +2,7 @@ package com.actisys.compositeservice.client.impl;
 
 import com.actisys.compositeservice.client.InventoryServiceClient;
 import com.actisys.compositeservice.config.ServiceProperties.InventoryServiceProperties;
-import com.actisys.compositeservice.dto.menu.AddRecipeDTO;
+import com.actisys.dto.AddRecipeDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

@@ -3,8 +3,8 @@ package com.actisys.compositeservice.service.impl;
 import com.actisys.compositeservice.client.InventoryServiceClient;
 import com.actisys.compositeservice.client.MenuServiceClient;
 import com.actisys.compositeservice.dto.menu.AddMenuItem;
-import com.actisys.compositeservice.dto.menu.AddRecipeDTO;
 import com.actisys.compositeservice.service.MenuService;
+import com.actisys.dto.AddRecipeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,11 +23,11 @@ public class MenuServiceImpl implements MenuService {
     private final InventoryServiceClient inventoryServiceClient;
 
     @Override
-    public Mono<ResponseEntity<Boolean>> addNewDish(AddMenuItem menuItem) {
+    public Mono<ResponseEntity<Boolean>> addNewDish(AddMenuItem menuItem, String username) {
         String transactionId = UUID.randomUUID().toString();
-        log.info("Starting transaction {} for new dish", transactionId);
+        log.info("Starting transaction {} for new dish with username: {}", transactionId, username);
 
-        return menuServiceClient.createDish(menuItem.getItem())
+        return menuServiceClient.createDish(menuItem.getItem(), username)
                 .flatMap(dishId -> {
                     log.info("Transaction {}: Dish created with ID: {}", transactionId, dishId);
 
@@ -35,7 +35,6 @@ public class MenuServiceImpl implements MenuService {
                             .menuItemId(dishId)
                             .ingredientsMap(menuItem.getIngredientsMap())
                             .build();
-
                     return inventoryServiceClient.createRecipe(recipeDTO)
                             .flatMap(recipeCreated -> {
                                 if (Boolean.TRUE.equals(recipeCreated)) {
@@ -45,14 +44,14 @@ public class MenuServiceImpl implements MenuService {
                                 } else {
                                     log.warn("Transaction {}: Recipe creation failed for dish {}",
                                             transactionId, dishId);
-                                    return rollbackDish(dishId, transactionId)
+                                    return rollbackDish(dishId, transactionId, username)
                                             .thenReturn(ResponseEntity.badRequest().body(false));
                                 }
                             })
                             .onErrorResume(error -> {
                                 log.error("Transaction {}: Error creating recipe for dish {}",
                                         transactionId, dishId, error);
-                                return rollbackDish(dishId, transactionId)
+                                return rollbackDish(dishId, transactionId, username)
                                         .thenReturn(ResponseEntity.badRequest().body(false));
                             });
                 })
@@ -63,9 +62,9 @@ public class MenuServiceImpl implements MenuService {
                 });
     }
 
-    private Mono<Void> rollbackDish(Long dishId, String transactionId) {
+    private Mono<Void> rollbackDish(Long dishId, String transactionId, String username) {
         log.info("Transaction {}: Rolling back dish {}", transactionId, dishId);
-        return menuServiceClient.deleteDish(dishId)
+        return menuServiceClient.deleteDish(dishId, username)
                 .doOnSuccess(v -> log.info("Transaction {}: Dish {} rolled back", transactionId, dishId))
                 .onErrorResume(error -> {
                     log.error("Transaction {}: Failed to rollback dish {}", transactionId, dishId, error);

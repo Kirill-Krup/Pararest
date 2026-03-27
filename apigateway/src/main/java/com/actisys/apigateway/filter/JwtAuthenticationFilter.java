@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
       return chain.filter(exchange);
     }
 
-    String token = extractTokenFromCookie(exchange);
+    String token = extractToken(exchange);
 
     if (token == null) {
       log.warn("Missing JWT token for protected endpoint: {}", path);
@@ -93,6 +93,23 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
     return null;
   }
 
+  private String extractToken(ServerWebExchange exchange) {
+    HttpCookie cookie = exchange.getRequest().getCookies().getFirst("auth_token");
+    if (cookie != null) {
+      log.debug("Found auth_token cookie");
+      return cookie.getValue();
+    }
+
+    String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
+    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+      log.debug("Found Authorization header");
+      return authHeader.substring(7);
+    }
+
+    log.debug("No token found");
+    return null;
+  }
+
   private String extractUsername(Claims claims) {
     String username = claims.get("username", String.class);
     if (username == null) {
@@ -106,7 +123,14 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
   private boolean isPublicEndpoint(String path) {
     return path.startsWith("/api/v1/auth/login") ||
-        path.startsWith("/api/v1/auth/register") ;
+            path.startsWith("/api/v1/auth/register") ||
+            path.startsWith("/api/v1/menu/getAll") ||
+            path.startsWith("/api/v1/categories/getAll") ||
+            path.startsWith("/api/v1/recipes/getRecipeByMenuId") ||
+            path.startsWith("/v3/api-docs") ||
+            path.startsWith("/swagger-ui") ||
+            path.startsWith("/webjars") ||
+            path.contains("/v3/api-docs");
   }
 
   @Override

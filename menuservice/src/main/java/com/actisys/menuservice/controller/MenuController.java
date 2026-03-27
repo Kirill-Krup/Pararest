@@ -22,8 +22,20 @@ public class MenuController {
     }
 
     @PostMapping("/addNewMenuItem")
-    public ResponseEntity<MenuItemDTO> addNewMenuItem(@RequestBody AddMenuItemDTO newMenuItemDTO) {
-        return ResponseEntity.ok().body(menuService.addNewMenuItem(newMenuItemDTO));
+    public ResponseEntity<Long> addNewMenuItem(@RequestBody AddMenuItemDTO newMenuItemDTO,
+                                               @RequestHeader("X-Username") String userName) {
+        return ResponseEntity.ok().body(menuService.addNewMenuItem(userName, newMenuItemDTO));
+    }
+
+    @GetMapping("/getMenuItemsByIds")
+    public ResponseEntity<List<MenuItemDTO>> getMenuItemsByIds(@RequestBody List<Long> menuIds) {
+        return ResponseEntity.ok().body(menuService.getMenuItemsByIds(menuIds));
+    }
+
+    @PostMapping("/addNewMenuItemNoRecipe")
+    public ResponseEntity<MenuItemDTO> addNewMenuItemNoRecipe(@RequestBody AddMenuItemDTO newMenuItemDTO,
+                                                              @RequestHeader("X-Username") String userName) {
+        return ResponseEntity.ok().body(menuService.addNewMenuItemNoRecipe(userName, newMenuItemDTO));
     }
 
     @PutMapping("/editMenuItem/{id}")

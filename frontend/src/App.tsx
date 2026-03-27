@@ -4,6 +4,7 @@ import LoginPage from './pages/auth/LoginPage.tsx';
 import HomePage from './pages/HomePage.tsx';
 import {AuthProvider} from "./context/AuthContext.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
+import MenuPage from "./pages/MenuPage.tsx";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/admin/dashboard" element={<AdminPage />} />
+                <Route path={"/menu"} element={<MenuPage/>}/>
             </Routes>
         </AuthProvider>
     </BrowserRouter>

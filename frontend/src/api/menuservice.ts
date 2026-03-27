@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { MenuItemDTO, AddMenuItemDTO, AddMenuItemRequest } from '../models/MenuItemDTO';
+import type {CategoryDTO, MenuItemDTO} from "../models/types/menu.types.ts";
 
 const API_BASE = 'http://localhost:8080/api/v1';
 
@@ -11,14 +11,18 @@ const api = axios.create({
     },
 });
 
-export interface MenuItemFormData {
+export interface MenuCategoryDTO{
+    id: number,
+    name: string
+}
+
+export interface AddMenuItemDTO {
     name: string;
     description: string;
     price: number;
-    category: string;
-    recipe?: string | null;
+    category: MenuCategoryDTO;
     imageUrl?: string | null;
-    isActive: boolean;
+    preparationTime?: number | null
 }
 
 export const menuService = {
@@ -32,43 +36,10 @@ export const menuService = {
         }
     },
 
-    async getMenuItemById(id: string): Promise<MenuItemDTO> {
+
+    async createMenuItem(data: AddMenuItemDTO): Promise<MenuItemDTO> {
         try {
-            const response = await api.get<MenuItemDTO>(`/menu/${id}`);
-            return response.data;
-        } catch (error) {
-            console.error('Ошибка при получении позиции меню:', error);
-            throw error;
-        }
-    },
-
-    async createMenuItemWithRecipe(formData: MenuItemFormData, ingredientsMap: Record<number, number>): Promise<boolean> {
-        try {
-            const itemDTO: AddMenuItemDTO = {
-                name: formData.name,
-                description: formData.description,
-                price: formData.price,
-                category: formData.category,
-                imageUrl: formData.imageUrl || null,
-                isActive: formData.isActive
-            };
-
-            const request: AddMenuItemRequest = {
-                item: itemDTO,
-                ingredientsMap: ingredientsMap
-            };
-
-            const response = await api.post<boolean>('/composite/menu/addNewDish', request);
-            return response.data;
-        } catch (error) {
-            console.error('Ошибка при создании блюда с рецептом:', error);
-            throw error;
-        }
-    },
-
-    async createMenuItem(data: MenuItemFormData): Promise<MenuItemDTO> {
-        try {
-            const response = await api.post<MenuItemDTO>('/menu/create', data);
+            const response = await api.post<MenuItemDTO>('/menu/addNewMenuItemNoRecipe', data);
             return response.data;
         } catch (error) {
             console.error('Ошибка при создании позиции меню:', error);
@@ -76,7 +47,7 @@ export const menuService = {
         }
     },
 
-    async updateMenuItem(id: string, data: Partial<MenuItemFormData>): Promise<MenuItemDTO> {
+    async updateMenuItem(id: string, data: Partial<AddMenuItemDTO>): Promise<MenuItemDTO> {
         try {
             const response = await api.put<MenuItemDTO>(`/menu/update/${id}`, data);
             return response.data;
@@ -100,6 +71,16 @@ export const menuService = {
             const response = await api.patch<MenuItemDTO>(`/menu/toggle-active/${id}`);
             return response.data;
         } catch (error) {
+            console.error('Ошибка при изменении статуса активности:', error);
+            throw error;
+        }
+    },
+
+    async getAllCategories(): Promise<CategoryDTO[]>{
+        try{
+            const response = await api.get<CategoryDTO[]>(`/categories/getAll`);
+            return response.data;
+        }catch (error) {
             console.error('Ошибка при изменении статуса активности:', error);
             throw error;
         }

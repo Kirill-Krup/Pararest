@@ -1,0 +1,7 @@
+package com.actisys.enums;
+
+public enum PaymentStatus {
+    PAID,
+    NOT_PAID,
+    ERROR
+}

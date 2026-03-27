@@ -3,6 +3,7 @@ import { type MenuItemFormData, menuService } from '../../api/menuservice';
 import { ingredientService } from '../../api/ingredientService';
 import '../../styles/admin/MenuTableCss.css';
 import type { MenuItemDTO } from "../../models/MenuItemDTO";
+import {compositeservice} from "../../api/compositeservice.ts";
 
 interface IngredientSelection {
     id: number;
@@ -164,7 +165,7 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({
                     }
                 });
 
-                await menuService.createMenuItemWithRecipe(formData, ingredientsMap);
+                await compositeservice.createMenuItemWithRecipe(formData, ingredientsMap);
             }
 
             await onSave();

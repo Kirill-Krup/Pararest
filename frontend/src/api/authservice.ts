@@ -1,4 +1,4 @@
-import type { RegisterRequest, JwtResponse, LoginRequest } from '../models/auth.types.ts';
+import type { RegisterRequest, JwtResponse, LoginRequest } from '../models/types/auth.types.ts';
 import type { ErrorResponse } from '../models/ErrorResponse.ts';
 import type { UserDTO } from '../models/UserDTO.ts';
 

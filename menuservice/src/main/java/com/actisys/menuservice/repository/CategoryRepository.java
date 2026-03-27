@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<MenuCategory, Long> {
+    boolean existsByName(String name);
+
+    MenuCategory findByName(String name);
 }

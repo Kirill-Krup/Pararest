@@ -1,6 +1,6 @@
 package com.actisys.compositeservice.client;
 
-import com.actisys.compositeservice.dto.menu.AddRecipeDTO;
+import com.actisys.dto.AddRecipeDTO;
 import reactor.core.publisher.Mono;
 
 public interface InventoryServiceClient {

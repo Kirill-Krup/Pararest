@@ -33,4 +33,6 @@ public class Ingredient {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    private BigDecimal price;
 }

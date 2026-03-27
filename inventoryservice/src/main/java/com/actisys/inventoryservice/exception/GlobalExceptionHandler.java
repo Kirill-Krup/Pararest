@@ -23,6 +23,14 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
 
+  @ExceptionHandler(SupplierNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleSupplierNotFoundException(
+          SupplierNotFoundException e) {
+    ErrorResponse error = new ErrorResponse("SUPPLIER NOT FOUND", e.getMessage());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
+
+
   @ExceptionHandler(RecipeNotFoundException.class)
   public ResponseEntity<ErrorResponse> handleRecipeNotFoundException(
           RecipeNotFoundException e) {

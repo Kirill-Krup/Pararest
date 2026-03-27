@@ -1,4 +1,4 @@
-package com.actisys.inventoryservice.dto;
+package com.actisys.dto;
 
 import lombok.*;
 
@@ -11,5 +11,5 @@ import java.util.HashMap;
 @Builder
 public class AddRecipeDTO {
     private Long menuItemId;
-    private HashMap<Long, Integer> ingredientsMap;
+    private HashMap<String, Integer> ingredientsMap;
 }

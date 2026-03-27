@@ -14,6 +14,21 @@ jwt:
   issuer: actisys-auth
   refresh-token-expire-mill: 604800000
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: "1. Auth Service"
+        url: "/v3/api-docs/auth"
+      - name: "2. User Service"
+        url: "/v3/api-docs/users"
+      - name: "3. Menu Service"
+        url: "/v3/api-docs/menu"
+      - name: "4. Inventory Service"
+        url: "/v3/api-docs/inventory"
+      - name: "5. Composite Service"
+        url: "/v3/api-docs/composite"
+
 logging:
   level:
     com.actisys.apigateway.filter: DEBUG

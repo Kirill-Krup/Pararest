@@ -71,6 +71,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(userId));
+
         userRepository.delete(user);
+    }
+
+    @Override
+    public void updateUserRoom(UUID uuid, int room) {
+        User user = userRepository.findById(uuid).orElseThrow(()->new UserNotFoundException(uuid));
+        user.setRoomNumber(room);
+        userRepository.save(user);
     }
 }

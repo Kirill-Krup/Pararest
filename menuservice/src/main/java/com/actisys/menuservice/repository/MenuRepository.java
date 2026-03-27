@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MenuRepository extends JpaRepository<MenuItem, Long> {
+    boolean existsByName(String name);
 }

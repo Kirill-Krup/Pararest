@@ -18,4 +18,5 @@ public class IngredientDTO {
     private BigDecimal currentStock;
     private BigDecimal minStock;
     private LocalDateTime updatedAt;
+    private BigDecimal price;
 }

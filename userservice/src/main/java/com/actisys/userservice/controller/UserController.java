@@ -5,7 +5,6 @@ import com.actisys.userservice.dto.UserDTO;
 import com.actisys.userservice.model.UserRole;
 import com.actisys.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,12 +48,13 @@ public class UserController {
         return ResponseEntity.ok().body(userService.handleAccess(userId));
     }
 
-    @DeleteMapping("/deleteUser/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID userId){
-        userService.deleteUser(userId);
+    @PutMapping("/updateUserRoom/{room}")
+    public ResponseEntity<Void> updateRoomNumber(@RequestHeader("X-User-Id") String userId,
+                                                 @PathVariable int room){
+        userService.updateUserRoom(UUID.fromString(userId), room);
         return ResponseEntity.ok().build();
     }
+
 
 
 

@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
 import { useNavigate } from "react-router-dom";
 import authService from "../api/authservice.ts";
 import type { UserDTO } from "../models/UserDTO.ts";
-import type { LoginRequest, RegisterRequest } from "../models/auth.types.ts";
+import type { LoginRequest, RegisterRequest } from "../models/types/auth.types.ts";
 
 interface AuthContextType {
     user: UserDTO | null;

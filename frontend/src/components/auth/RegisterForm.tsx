@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import type {RegisterRequest} from '../../models/auth.types.ts';
+import type {RegisterRequest} from '../../models/types/auth.types.ts';
 import type {UserAddDTO} from '../../models/UserAddDTO.ts';
 import authService from '../../api/authservice.ts';
 import '../../styles/auth/RegisterForm.css';

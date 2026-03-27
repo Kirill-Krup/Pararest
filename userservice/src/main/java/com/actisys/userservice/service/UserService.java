@@ -20,4 +20,6 @@ public interface UserService {
     UserDTO handleAccess(UUID userId);
 
     void deleteUser(UUID userId);
+
+    void updateUserRoom(UUID uuid, int room);
 }

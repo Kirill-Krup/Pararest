@@ -11,5 +11,5 @@ import java.util.HashMap;
 @Builder
 public class AddMenuItem {
     private AddMenuItemDTO item;
-    private HashMap<Long, Integer> ingredientsMap;
+    private HashMap<String, Integer> ingredientsMap;
 }

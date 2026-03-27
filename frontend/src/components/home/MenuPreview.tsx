@@ -1,73 +1,32 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/home/MenuPreview.css';
+import type {MenuItemDTO} from "../../models/types/menu.types.ts";
+import {menuService} from "../../api/menuservice.ts";
 
-interface MenuItem {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    category: string;
-    popular?: boolean;
-}
 
 const MenuPreview: React.FC = () => {
     const navigate = useNavigate();
     const [activeCategory, setActiveCategory] = useState('Все');
+    const [menuItems, setMenuItems] = useState<MenuItemDTO[]>([]);
 
-    const menuItems: MenuItem[] = [
-        {
-            id: 1,
-            name: 'Стейк Рибай',
-            description: 'Сочный стейк из мраморной говядины с овощами гриль',
-            price: 2500,
-            category: 'Основные блюда',
-            popular: true,
-        },
-        {
-            id: 2,
-            name: 'Лосось на гриле',
-            description: 'Филе лосося с лимонным соусом и рисом',
-            price: 1800,
-            category: 'Основные блюда',
-        },
-        {
-            id: 3,
-            name: 'Цезарь с креветками',
-            description: 'Классический салат с тигровыми креветками',
-            price: 890,
-            category: 'Салаты',
-            popular: true,
-        },
-        {
-            id: 4,
-            name: 'Тирамису',
-            description: 'Итальянский десерт с кофе и маскарпоне',
-            price: 650,
-            category: 'Десерты',
-        },
-        {
-            id: 5,
-            name: 'Том Ям',
-            description: 'Острый тайский суп с морепродуктами',
-            price: 750,
-            category: 'Супы',
-        },
-        {
-            id: 6,
-            name: 'Крем-брюле',
-            description: 'Нежный крем с карамельной корочкой',
-            price: 550,
-            category: 'Десерты',
-            popular: true,
-        },
-    ];
+    useEffect(()=>{
+        const loadMenu = async ()=>{
+            try{
+                const data = await menuService.getAllMenuItems();
+                setMenuItems(data);
+            }catch (error){
+                console.error("Не удалось загрузить меню:", error);
+            }
+        };
+        loadMenu().catch(console.error);
+    }, []);
 
-    const categories = ['Все', 'Основные блюда', 'Салаты', 'Супы', 'Десерты'];
+    const categories = ['Все', 'Основные блюда', 'Салаты', 'Супы', 'Десерты', 'Напитки'];
 
     const filteredItems = activeCategory === 'Все'
         ? menuItems
-        : menuItems.filter(item => item.category === activeCategory);
+        : menuItems.filter(item => item.category.name === activeCategory);
 
     return (
         <section id="menu" className="menu-preview-section">
@@ -95,14 +54,9 @@ const MenuPreview: React.FC = () => {
                 <div className="menu-grid">
                     {filteredItems.map(item => (
                         <div key={item.id} className="menu-card">
-                            {item.popular && (
-                                <span className="popular-badge">Популярное</span>
-                            )}
-
                             <div className="menu-card-image">
-                                {/* Placeholder для изображения */}
                                 <div className="image-placeholder">
-                                    <span>🍽️</span>
+                                    <img alt={"Dish photo"} src={item.imageUrl}/>
                                 </div>
                             </div>
 
@@ -111,7 +65,7 @@ const MenuPreview: React.FC = () => {
                                 <p className="menu-card-description">{item.description}</p>
 
                                 <div className="menu-card-footer">
-                                    <span className="menu-card-price">{item.price} ₽</span>
+                                    <span className="menu-card-price">{item.price} BYN</span>
                                     <button className="add-to-cart-btn">
                                         Добавить
                                     </button>

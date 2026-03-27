@@ -10,9 +10,11 @@ import com.actisys.inventoryservice.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,6 +51,11 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void pickUpIngredients(HashMap<Long, Integer> ingredients) {
-
+        for(Map.Entry<Long, Integer> entry : ingredients.entrySet()) {
+            Ingredient ingredient = ingredientRepository.findById(entry.getKey()).orElseThrow(
+                    ()->new IngredientNotFoundException(entry.getKey()));
+            ingredient.setCurrentStock(ingredient.getCurrentStock().subtract(BigDecimal.valueOf(entry.getValue())));
+            ingredientRepository.save(ingredient);
+        }
     }
 }

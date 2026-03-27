@@ -2,6 +2,7 @@ package com.actisys.inventoryservice.controller;
 
 import com.actisys.inventoryservice.dto.AddSupplyDTO;
 import com.actisys.inventoryservice.dto.SupplyDTO;
+import com.actisys.inventoryservice.model.SupplyStatus;
 import com.actisys.inventoryservice.service.SupplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,9 @@ public class SupplyController {
         return ResponseEntity.ok().body(supplyService.addNewSupply(supplyDTO));
     }
 
-    @PutMapping("/editSupply/{id}")
-    public ResponseEntity<SupplyDTO> editSupply(@PathVariable Long id, @RequestBody AddSupplyDTO supplyDTO) {
-        return ResponseEntity.ok().body(supplyService.editSupply(id, supplyDTO));
+    @PutMapping("/updateSupplyStatus/{id}")
+    public ResponseEntity<SupplyDTO> editSupply(@PathVariable Long id, @RequestBody SupplyStatus supplyStatus) {
+        return ResponseEntity.ok().body(supplyService.editSupply(id, supplyStatus));
     }
 
     @DeleteMapping("/deleteSupply/{id}")

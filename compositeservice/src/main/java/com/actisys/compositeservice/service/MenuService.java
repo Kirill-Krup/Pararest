@@ -5,5 +5,5 @@ import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 
 public interface MenuService {
-    Mono<ResponseEntity<Boolean>> addNewDish(AddMenuItem menuItem);
+    Mono<ResponseEntity<Boolean>> addNewDish(AddMenuItem menuItem, String username);
 }

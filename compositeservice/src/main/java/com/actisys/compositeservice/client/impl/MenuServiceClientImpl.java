@@ -11,7 +11,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
+import java.io.IOException;
 import java.time.Duration;
+import java.util.concurrent.TimeoutException;
 
 @Component
 @Slf4j
@@ -28,43 +30,54 @@ public class MenuServiceClientImpl implements MenuServiceClient {
     }
 
     @Override
-    public Mono<Long> createDish(AddMenuItemDTO dishDto) {
+    public Mono<Long> createDish(AddMenuItemDTO dishDto, String username) {
         String url = menuProperties.getHost() + menuProperties.getEndpoints().getAddNew();
 
         log.debug("Creating dish in menu service: {}", url);
+        log.debug("Username header: {}", username);
 
         return webClient.post()
                 .uri(url)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("X-Username", username)
                 .bodyValue(dishDto)
                 .retrieve()
+                .onStatus(status -> status.is4xxClientError(), response ->
+                        response.bodyToMono(String.class)
+                                .flatMap(errorBody -> {
+                                    log.error("Menu service error response: {}", errorBody);
+                                    return Mono.error(new RuntimeException("Menu service error: " + errorBody));
+                                })
+                )
                 .bodyToMono(Long.class)
                 .timeout(Duration.ofSeconds(10))
-                .retryWhen(Retry.backoff(3, Duration.ofSeconds(1)))
+                .retryWhen(Retry.backoff(3, Duration.ofSeconds(1))
+                        .filter(throwable -> throwable instanceof TimeoutException ||
+                                throwable instanceof IOException))
                 .doOnSuccess(success -> {
                     if (success != null) {
-                        log.info("Dish created successfully");
+                        log.info("Dish created successfully with id: {}", success);
                     } else {
-                        log.warn("Dish creation returned false");
+                        log.warn("Dish creation returned null");
                     }
                 })
                 .doOnError(e -> log.error("Failed to create dish: {}", e.getMessage()));
     }
 
     @Override
-    public Mono<Void> deleteDish(Long dishId) {
-        String url = menuProperties.getHost() + menuProperties.getEndpoints().getDeleteDishById() + dishId;
-        log.debug("Deleting dish with ID: {} from menu service", dishId);
+    public Mono<Void> deleteDish(Long dishId, String username) {
+        String url = menuProperties.getHost() + "/api/v1/menu/deleteMenuItem/" + dishId;
+
+        log.debug("Deleting dish in menu service: {}", url);
+        log.debug("Username for deletion: {}", username);
+
         return webClient.delete()
                 .uri(url)
+                .header("X-Username", username)
                 .retrieve()
                 .bodyToMono(Void.class)
-                .timeout(Duration.ofSeconds(5))
                 .doOnSuccess(v -> log.info("Dish {} deleted successfully", dishId))
-                .onErrorResume(e -> {
-                    log.error("Failed to delete dish {}: {}", dishId, e.getMessage());
-                    return Mono.empty();
-                });
+                .doOnError(e -> log.error("Failed to delete dish {}: {}", dishId, e.getMessage()));
     }
 
     @Override
