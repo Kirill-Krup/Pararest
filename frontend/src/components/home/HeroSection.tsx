@@ -1,9 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../../styles/home/HeroSection.css';
 
 const HeroSection: React.FC = () => {
-    const navigate = useNavigate();
 
     return (
         <section id="hero" className="hero-section">
@@ -22,7 +20,7 @@ const HeroSection: React.FC = () => {
                 <div className="hero-buttons">
                     <button
                         className="btn btn-primary"
-                        onClick={() => navigate('/reservation')}
+                        onClick={() => document.getElementById('reservation')?.scrollIntoView({ behavior: 'smooth' })}
                     >
                         Забронировать столик
                     </button>

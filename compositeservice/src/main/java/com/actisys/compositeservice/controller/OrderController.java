@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/getFullOrders")
-    public ResponseEntity<List<FullOrderDTO>> getFullOrders(@RequestHeader("X-User-Id") String id) {
-        return ResponseEntity.ok().body(orderService.getFullOrders(id));
+    public Mono<ResponseEntity<List<FullOrderDTO>>> getFullOrders(@RequestHeader("X-User-Id") String id) {
+        return orderService.getFullOrders(id);
     }
 }

@@ -2,6 +2,8 @@ package com.actisys.compositeservice.dto.order;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -9,5 +11,5 @@ import lombok.*;
 @Builder
 public class FullOrderDTO {
     private OrderDTO order;
-    private MenuItemDTO menuItem;
+    private List<MenuItemDTO> menuItem;
 }

@@ -1,6 +1,7 @@
 import type {AddMenuItemDTO, AddMenuItemRequest} from "../models/MenuItemDTO.ts";
 import axios from "axios";
-const API_BASE = 'http://localhost:8080/api/v1';
+import type {FullOrderDTO} from "../models/types/order.types.ts";
+const API_BASE = 'http://localhost:8080/api/v1/composite';
 
 const api = axios.create({
     baseURL: API_BASE,
@@ -26,11 +27,21 @@ export const compositeservice = {
                 ingredientsMap: ingredientsMap
             };
 
-            const response = await api.post<boolean>('/composite/menu/addNewDish', request);
+            const response = await api.post<boolean>('/menu/addNewDish', request);
             return response.data;
         } catch (error) {
             console.error('Ошибка при создании блюда с рецептом:', error);
             throw error;
         }
-    }
+    },
+
+    async getCart(): Promise<FullOrderDTO> {
+        try {
+            const response = await api.get<FullOrderDTO>('/orders/cart');
+            return response.data;
+        } catch (error) {
+            console.error('Ошибка при получении корзины:', error);
+            throw error;
+        }
+    },
 }

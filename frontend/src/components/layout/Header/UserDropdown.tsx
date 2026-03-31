@@ -64,6 +64,14 @@ const UserDropdown: React.FC = () => {
                     </div>
 
                     <div className="dropdown-divider"></div>
+                    <Link
+                        to="/profile"
+                        className="dropdown-item"
+                        onClick={handleItemClick}
+                    >
+                        <span className="item-icon">👤</span>
+                        Профиль
+                    </Link>
 
                     <Link
                         to="/orders"
@@ -75,12 +83,12 @@ const UserDropdown: React.FC = () => {
                     </Link>
 
                     <Link
-                        to="/profile"
+                        to="/cart"
                         className="dropdown-item"
                         onClick={handleItemClick}
                     >
-                        <span className="item-icon">👤</span>
-                        Профиль
+                        <span className="item-icon">📦</span>
+                        Корзина
                     </Link>
 
                     <Link

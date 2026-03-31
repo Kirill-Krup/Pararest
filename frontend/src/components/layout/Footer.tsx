@@ -9,6 +9,17 @@ const Footer: React.FC = () => {
                 <div className="footer-grid">
 
                     <div className="footer-column">
+                        <h4 className="footer-heading">Навигация</h4>
+                        <ul className="footer-links">
+                            <li><Link to="/">Главная</Link></li>
+                            <li><Link to="/menu">Меню</Link></li>
+                            <li><Link to="/reservation">Бронирование</Link></li>
+                            <li><Link to="/about">О нас</Link></li>
+                            <li><Link to="/contact">Контакты</Link></li>
+                        </ul>
+                    </div>
+
+                    <div className="footer-column">
                         <h3 className="footer-title">Actisys Restaurant</h3>
                         <p className="footer-text">
                             Ресторан при отеле, где каждое блюдо — это произведение искусства,
@@ -20,17 +31,6 @@ const Footer: React.FC = () => {
                             <a href="#" className="social-link" aria-label="VK">🔵</a>
                             <a href="#" className="social-link" aria-label="Telegram">✈️</a>
                         </div>
-                    </div>
-
-\                    <div className="footer-column">
-                        <h4 className="footer-heading">Навигация</h4>
-                        <ul className="footer-links">
-                            <li><Link to="/">Главная</Link></li>
-                            <li><Link to="/menu">Меню</Link></li>
-                            <li><Link to="/reservation">Бронирование</Link></li>
-                            <li><Link to="/about">О нас</Link></li>
-                            <li><Link to="/contact">Контакты</Link></li>
-                        </ul>
                     </div>
 
                     <div className="footer-column">

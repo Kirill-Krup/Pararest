@@ -1,0 +1,8 @@
+apigateway = 8080
+authservice = 8081
+userservice = 8082
+menuservice = 8083
+inventoryservice = 8084
+orderservice = 8085
+paymentservice = 8086
+compositeservice = 8087

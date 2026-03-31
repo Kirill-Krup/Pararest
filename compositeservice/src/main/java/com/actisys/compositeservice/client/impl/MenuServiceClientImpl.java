@@ -4,6 +4,7 @@ import com.actisys.compositeservice.client.MenuServiceClient;
 import com.actisys.compositeservice.config.ServiceProperties.MenuServiceProperties;
 import com.actisys.compositeservice.dto.menu.AddMenuItem;
 import com.actisys.compositeservice.dto.menu.AddMenuItemDTO;
+import com.actisys.compositeservice.dto.order.MenuItemDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import reactor.util.retry.Retry;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 @Component
@@ -81,15 +83,15 @@ public class MenuServiceClientImpl implements MenuServiceClient {
     }
 
     @Override
-    public Mono<AddMenuItem> getDishById(Long dishId) {
-        String url = menuProperties.getHost() + menuProperties.getEndpoints().getGetDishById() + dishId;
-        log.debug("Getting dish with ID: {} from menu service", dishId);
+    public Mono<List<MenuItemDTO>> getDishesById(List<Long> ids) {
+        String url = menuProperties.getHost() + menuProperties.getEndpoints().getGetDishesByIds() + ids;
+        log.debug("Getting dish with ID: {} from menu service", ids);
         return webClient.get()
                 .uri(url)
                 .retrieve()
-                .bodyToMono(AddMenuItem.class)
+                .bodyToMono(List.class)
                 .timeout(Duration.ofSeconds(5))
-                .doOnSuccess(dish -> log.info("Dish {} retrieved successfully", dishId))
-                .doOnError(e -> log.error("Failed to get dish {}: {}", dishId, e.getMessage()));
+                .doOnSuccess(dish -> log.info("Dish {} retrieved successfully", ids))
+                .doOnError(e -> log.error("Failed to get dish {}: {}", ids, e.getMessage()));
     }
 }

@@ -17,6 +17,6 @@ public class MenuServiceProperties {
   public static class Endpoints {
     private String addNew;
     private String deleteDishById;
-    private String getDishById;
+    private String getDishesByIds;
   }
 }

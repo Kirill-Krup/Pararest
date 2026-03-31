@@ -5,6 +5,8 @@ import HomePage from './pages/HomePage.tsx';
 import {AuthProvider} from "./context/AuthContext.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 import MenuPage from "./pages/MenuPage.tsx";
+import CartPage from "./pages/CartPage.tsx";
+import ReplenishmentPage from "./pages/ReplenishmentPage.tsx";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/admin/dashboard" element={<AdminPage />} />
                 <Route path={"/menu"} element={<MenuPage/>}/>
+                <Route path={"/cart"} element={<CartPage/>}/>
+                <Route path={"/wallet"} element={<ReplenishmentPage/>}/>
             </Routes>
         </AuthProvider>
     </BrowserRouter>

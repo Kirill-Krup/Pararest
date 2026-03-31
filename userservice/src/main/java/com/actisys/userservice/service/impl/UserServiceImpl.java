@@ -1,7 +1,14 @@
 package com.actisys.userservice.service.impl;
 
 import com.actisys.dto.CreateUserRequest;
+import com.actisys.enums.PaymentStatus;
+import com.actisys.kafkacommunication.replenishment.CreateReplenishmentEvent;
+import com.actisys.kafkacommunication.wallet.CreateWalletEvent;
+import com.actisys.kafkacommunication.wallet.RefundEvent;
+import com.actisys.kafkacommunication.wallet.RefundMoneyEvent;
+import com.actisys.kafkacommunication.wallet.WithdrawEvent;
 import com.actisys.userservice.dto.UserDTO;
+import com.actisys.userservice.exception.NotEnoughMoneyException;
 import com.actisys.userservice.exception.UserNotFoundException;
 import com.actisys.userservice.mapper.UserMapper;
 import com.actisys.userservice.model.User;
@@ -10,6 +17,7 @@ import com.actisys.userservice.repository.UserRepository;
 import com.actisys.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Override
     public void register(CreateUserRequest createUserRequest) {
@@ -80,5 +89,55 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(uuid).orElseThrow(()->new UserNotFoundException(uuid));
         user.setRoomNumber(room);
         userRepository.save(user);
+    }
+
+    @Override
+    public void topUp(CreateWalletEvent event) {
+        User user = userRepository.findById(event.getUserId()).orElseThrow(
+                ()->new UserNotFoundException(event.getUserId()));
+        user.setWallet(user.getWallet().add(event.getTotalAmount()));
+        userRepository.save(user);
+        CreateReplenishmentEvent replenishmentEvent = CreateReplenishmentEvent.builder()
+                .paymentId(event.getPaymentId())
+                .paymentStatus(PaymentStatus.SUCCESS)
+                .build();
+        kafkaTemplate.send("REPLENISHMENT_STATUS", replenishmentEvent);
+    }
+
+    @Override
+    public void withdrawMoney(CreateWalletEvent event) {
+        User user = userRepository.findById(event.getUserId()).orElseThrow(
+                ()->new UserNotFoundException(event.getUserId()));
+        WithdrawEvent withdrawEvent = new WithdrawEvent();
+        withdrawEvent.setPaymentId(event.getPaymentId());
+        if(user.getWallet().compareTo(event.getTotalAmount()) < 0){
+            withdrawEvent.setPaymentStatus(PaymentStatus.NOT_ENOUGH_MONEY);
+            kafkaTemplate.send("WITHDRAW_MONEY", withdrawEvent);
+            throw new NotEnoughMoneyException();
+        }
+        user.setWallet(user.getWallet().subtract(event.getTotalAmount()));
+        userRepository.save(user);
+        withdrawEvent.setPaymentStatus(PaymentStatus.PAID);
+        kafkaTemplate.send("WITHDRAW_MONEY", withdrawEvent);
+    }
+
+    @Override
+    public void refundMoneys(RefundMoneyEvent event) {
+        User user = userRepository.findById(event.getUserId()).orElseThrow(
+                ()->{
+                    RefundEvent statEvent = RefundEvent.builder()
+                            .paymentId(event.getPaymentId())
+                            .paymentStatus(PaymentStatus.ERROR)
+                            .build();
+                    kafkaTemplate.send("REFUND_STATUS_EVENT", statEvent);
+                    return new UserNotFoundException(event.getUserId());
+                });
+        user.setWallet(user.getWallet().subtract(event.getAmount()));
+        userRepository.save(user);
+        RefundEvent statEvent = RefundEvent.builder()
+                .paymentId(event.getPaymentId())
+                .paymentStatus(PaymentStatus.SUCCESS)
+                .build();
+        kafkaTemplate.send("REFUND_STATUS_EVENT", statEvent);
     }
 }

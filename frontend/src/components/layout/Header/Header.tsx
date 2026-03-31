@@ -51,13 +51,13 @@ const Header: React.FC = () => {
 
                 <nav className="nav-menu">
                     <button onClick={(e) => handleNavClick(e, 'hero')} className="nav-item">Главная</button>
-                    <button onClick={() => navigate('/reservation')} className="nav-item">Бронирование</button>
                     <button onClick={(e) => handleNavClick(e, 'menu')} className="nav-item">Меню</button>
                     <button onClick={(e) => handleNavClick(e, 'about')} className="nav-item">О нас</button>
+                    <button onClick={(e) => handleNavClick(e, 'reservation')} className="nav-item">Контакты</button>
                 </nav>
 
                 <div className="header-actions">
-                    {isAuthenticated ? (
+                {isAuthenticated ? (
                         <UserDropdown />
                     ) : (
                         <div className="auth-group">

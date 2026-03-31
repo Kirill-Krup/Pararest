@@ -1,12 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../../styles/home/ReservationCTA.css';
 
 const ReservationCTA: React.FC = () => {
-    const navigate = useNavigate();
-
     return (
-        <section className="reservation-cta-section">
+        <section id= "reservation" className="reservation-cta-section">
             <div className="cta-overlay"></div>
 
             <div className="container">
@@ -19,13 +16,6 @@ const ReservationCTA: React.FC = () => {
                     <p className="cta-subtitle">
                         Забронируйте столик прямо сейчас
                     </p>
-
-                    <button
-                        className="btn btn-primary btn-large"
-                        onClick={() => navigate('/reservation')}
-                    >
-                        Забронировать столик
-                    </button>
 
                     <div className="contact-info">
                         <div className="contact-item">
