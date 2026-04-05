@@ -1,7 +1,7 @@
 import type {MenuItemFormData} from "../api/menuservice.ts";
 
 export interface MenuItemDTO {
-    id: string;
+    id: number;
     name: string;
     description: string;
     price: number;

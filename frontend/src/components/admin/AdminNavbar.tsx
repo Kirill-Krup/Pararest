@@ -1,4 +1,5 @@
 import React from 'react';
+import { Users, Menu, Package, Truck, ShoppingCart, BarChart3 } from "lucide-react";
 import '../../styles/admin/AdminNavbar.css';
 
 interface AdminNavbarProps {
@@ -8,13 +9,12 @@ interface AdminNavbarProps {
 
 const AdminNavbar: React.FC<AdminNavbarProps> = ({ activeSection, onSectionChange }) => {
     const sections = [
-        { id: 'users', label: 'Пользователи', icon: '👥' },
-        { id: 'menu', label: 'Меню', icon: '📋' },
-        { id: 'ingredients', label: 'Ингредиенты', icon: '🥑' },
-        { id: 'supplies', label: 'Поставки', icon: '🚚' },
-        { id: 'orders', label: 'Заказы', icon: '📦' },
-        { id: 'transactions', label: 'Транзакции', icon: '💰' },
-        { id: 'statistics', label: 'Статистика', icon: '📊' }
+        { id: 'users',        label: 'Пользователи', icon: <Users size={20} /> },
+        { id: 'menu',         label: 'Меню',          icon: <Menu size={20} /> },
+        { id: 'ingredients',  label: 'Ингредиенты',   icon: <Package size={20} /> },
+        { id: 'supplies',     label: 'Поставки',      icon: <Truck size={20} /> },
+        { id: 'orders',       label: 'Заказы',        icon: <ShoppingCart size={20} /> },
+        { id: 'transactions', label: 'Транзакции',    icon: <BarChart3 size={20} /> },
     ];
 
     return (

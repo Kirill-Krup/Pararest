@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import type {
+    AddSupplyDTO,
     SupplyDTO,
     SupplierDTO,
-    SupplyRequestDTO
+    SupplyStatus
 } from '../../models/SupplyDTO';
 import type {IngredientDTO} from "../../models/IngredientDTO.ts";
 import {ingredientService} from "../../api/ingredientService.ts";
+import '../../styles/admin/SuppliesTable.css';
+
+const supplyStatusLabels: Record<SupplyStatus, string> = {
+    IN_DELIVERY_CENTER: 'В пункте приема',
+    IN_SORT_CENTER: 'На сортировке',
+    IN_SHIPPED: 'В пути',
+    SHIPPED: 'Доставлено',
+    CANCELED: 'Отменено'
+};
 const SuppliesTable: React.FC = () => {
     const [supplies, setSupplies] = useState<SupplyDTO[]>([]);
     const [ingredients, setIngredients] = useState<IngredientDTO[]>([]);
     const [suppliers, setSuppliers] = useState<SupplierDTO[]>([]);
     const [loading, setLoading] = useState(true);
     const [showRequestForm, setShowRequestForm] = useState(false);
-    const [newRequest, setNewRequest] = useState<SupplyRequestDTO>({
+    const [newRequest, setNewRequest] = useState<AddSupplyDTO>({
         supplierId: 0,
-        ingredientId: 0,
-        quantity: 0
+        items: [{
+            ingredientId: 0,
+            quantity: 0,
+            priceAtSupply: 0
+        }]
     });
 
     const fetchData = async () => {
@@ -40,17 +53,28 @@ const SuppliesTable: React.FC = () => {
         fetchData();
     }, []);
 
+    const requestItem = newRequest.items[0];
+
     const handleCreateRequest = async () => {
-        if (!newRequest.supplierId || !newRequest.ingredientId || newRequest.quantity <= 0) {
+        if (
+            !newRequest.supplierId ||
+            !requestItem ||
+            !requestItem.ingredientId ||
+            requestItem.quantity <= 0 ||
+            requestItem.priceAtSupply <= 0
+        ) {
             alert('Заполните все поля');
             return;
         }
 
         try {
             await ingredientService.createSupplyRequest(newRequest);
-            await fetchData(); // Обновляем список поставок
+            await fetchData();
             setShowRequestForm(false);
-            setNewRequest({ supplierId: 0, ingredientId: 0, quantity: 0 });
+            setNewRequest({
+                supplierId: 0,
+                items: [{ ingredientId: 0, quantity: 0, priceAtSupply: 0 }]
+            });
         } catch (err) {
             alert('Ошибка при создании запроса');
             console.error(err);
@@ -59,7 +83,11 @@ const SuppliesTable: React.FC = () => {
 
     const formatDate = (dateStr: string | null) => {
         if (!dateStr) return '—';
-        return new Date(dateStr).toLocaleDateString('ru-RU');
+        return new Date(dateStr).toLocaleString('ru-RU');
+    };
+
+    const formatPrice = (value: number) => {
+        return `${Number(value || 0).toLocaleString('ru-RU')} ₽`;
     };
     if (loading) {
         return (
@@ -103,8 +131,16 @@ const SuppliesTable: React.FC = () => {
                         <div className="form-group">
                             <label>Ингредиент</label>
                             <select
-                                value={newRequest.ingredientId}
-                                onChange={(e) => setNewRequest({...newRequest, ingredientId: parseInt(e.target.value)})}
+                                value={requestItem?.ingredientId ?? 0}
+                                onChange={(e) =>
+                                    setNewRequest({
+                                        ...newRequest,
+                                        items: [{
+                                            ...requestItem,
+                                            ingredientId: parseInt(e.target.value)
+                                        }]
+                                    })
+                                }
                             >
                                 <option value={0}>Выберите ингредиент</option>
                                 {ingredients.map(i => (
@@ -120,9 +156,36 @@ const SuppliesTable: React.FC = () => {
                                 type="number"
                                 min="0"
                                 step="0.01"
-                                value={newRequest.quantity}
-                                onChange={(e) => setNewRequest({...newRequest, quantity: parseFloat(e.target.value) || 0})}
+                                value={requestItem?.quantity ?? 0}
+                                onChange={(e) =>
+                                    setNewRequest({
+                                        ...newRequest,
+                                        items: [{
+                                            ...requestItem,
+                                            quantity: parseFloat(e.target.value) || 0
+                                        }]
+                                    })
+                                }
                                 placeholder="Введите количество"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Цена за единицу (₽)</label>
+                            <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                value={requestItem?.priceAtSupply ?? 0}
+                                onChange={(e) =>
+                                    setNewRequest({
+                                        ...newRequest,
+                                        items: [{
+                                            ...requestItem,
+                                            priceAtSupply: parseFloat(e.target.value) || 0
+                                        }]
+                                    })
+                                }
+                                placeholder="Введите цену"
                             />
                         </div>
                     </div>
@@ -143,7 +206,8 @@ const SuppliesTable: React.FC = () => {
                     <tr>
                         <th>ID</th>
                         <th>Поставщик</th>
-                        <th>Ингредиент</th>
+                        <th>Позиции</th>
+                        <th>Сумма</th>
                         <th>Дата запроса</th>
                         <th>Дата поставки</th>
                         <th>Статус</th>
@@ -152,7 +216,7 @@ const SuppliesTable: React.FC = () => {
                     <tbody>
                     {supplies.length === 0 ? (
                         <tr>
-                            <td colSpan={6} className="empty-message">
+                                <td colSpan={7} className="empty-message">
                                 Нет записей о поставках
                             </td>
                         </tr>
@@ -161,18 +225,16 @@ const SuppliesTable: React.FC = () => {
                             <tr key={supply.id}>
                                 <td>{supply.id}</td>
                                 <td>
-                                    <div className="supplier-info">
-                                        <strong>{supply.supplier.name}</strong>
-                                        <span className="supplier-phone">{supply.supplier.phone}</span>
-                                    </div>
+                                    <strong>{supply.supplier.name}</strong>
                                 </td>
-                                <td>{supply.ingredient.name}</td>
+                                <td>{supply.items.map(item => `${item.ingredient.name} (${item.quantity})`).join(', ') || '—'}</td>
+                                <td>{formatPrice(supply.totalPrice)}</td>
                                 <td>{formatDate(supply.dateOfRequest)}</td>
                                 <td>{formatDate(supply.dateOfSupply)}</td>
                                 <td>
-                                        <span className={`supply-status ${supply.dateOfSupply ? 'completed' : 'pending'}`}>
-                                            {supply.dateOfSupply ? '✅ Доставлено' : '⏳ Ожидание'}
-                                        </span>
+                                    <span className={`supply-status ${supply.status === 'SHIPPED' ? 'completed' : 'pending'}`}>
+                                        {supplyStatusLabels[supply.status] ?? supply.status}
+                                    </span>
                                 </td>
                             </tr>
                         ))

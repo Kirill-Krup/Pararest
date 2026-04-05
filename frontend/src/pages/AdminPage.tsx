@@ -7,13 +7,15 @@ import UsersTable from "../components/admin/UsersTable.tsx";
 import MenuTable from "../components/admin/MenuTable.tsx";
 import IngredientsTable from "../components/admin/IngredientTable.tsx";
 import SuppliesTable from "../components/admin/SupplierTable.tsx";
+import OrdersTable from "../components/admin/OrdersTable.tsx";
+import PaymentsTable from "../components/admin/PaymentsTable.tsx";
 
 const AdminPage: React.FC = () => {
     const [activeSection, setActiveSection] = useState('users');
 
     useEffect(() => {
         const handleScroll = () => {
-            const sections = ['users', 'menu', 'ingredients', 'supplies', 'orders', 'transactions', 'statistics'];
+            const sections = ['users', 'menu', 'ingredients', 'supplies', 'orders', 'transactions'];
 
             for (const sectionId of sections) {
                 const element = document.getElementById(sectionId);
@@ -62,6 +64,14 @@ const AdminPage: React.FC = () => {
 
                     <section id="supplies" className="admin-section">
                         <SuppliesTable />
+                    </section>
+
+                    <section id="orders" className="admin-section">
+                        <OrdersTable />
+                    </section>
+
+                    <section id="transactions" className="admin-section">
+                        <PaymentsTable />
                     </section>
 
                 </main>

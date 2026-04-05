@@ -40,8 +40,8 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAllUserOrders(UUID.fromString(userId)));
     }
 
-    @GetMapping("/cart")
-    public ResponseEntity<OrderDTO> getCart(@RequestHeader("X-User-Id") String userId){
+    @GetMapping("/cart/{userId}")
+    public ResponseEntity<OrderDTO> getCart(@PathVariable String userId){
         return ResponseEntity.ok(orderService.getCart(UUID.fromString(userId)));
     }
 
@@ -49,6 +49,11 @@ public class OrderController {
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id){
         orderService.deleteOrder(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<OrderDTO>> getCurrentOrders(@RequestHeader("X-User-Id") String userId){
+        return ResponseEntity.ok(orderService.getUserOrders(UUID.fromString(userId)));
     }
 
     @PostMapping("/cart/items/{menuItemId}")

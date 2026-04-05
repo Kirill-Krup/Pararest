@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
 
-  @ExceptionHandler(OrderNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleOrderCanNotBeCancelledException(OrderNotFoundException e) {
+  @ExceptionHandler(CanNotCancelOrderNowException.class)
+  public ResponseEntity<ErrorResponse> handleOrderCanNotBeCancelledException(CanNotCancelOrderNowException e) {
     ErrorResponse error = new ErrorResponse("CAN NOT CANCELLED ORDER NOW", e.getMessage());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }

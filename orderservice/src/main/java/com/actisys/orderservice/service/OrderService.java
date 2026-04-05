@@ -31,4 +31,6 @@ public interface OrderService {
     void cancelOrder(Long orderId);
 
     void updateStatusForCancelledOrder(CreateOrderEvent event);
+
+    List<OrderDTO> getUserOrders(UUID uuid);
 }

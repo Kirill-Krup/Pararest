@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "compensation_record")
 public class CompensationRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

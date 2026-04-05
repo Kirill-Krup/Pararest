@@ -1,9 +1,6 @@
 package com.actisys.orderservice.configuration.consumer;
 
 import com.actisys.kafkacommunication.order.CreateOrderEvent;
-import com.actisys.kafkacommunication.order.CreatePaymentEvent;
-import com.actisys.kafkacommunication.replenishment.CreateReplenishmentEvent;
-import com.actisys.kafkacommunication.wallet.WithdrawEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.serializer.JacksonJsonDeserializer;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,15 +28,15 @@ public class KafkaConsumerConfig {
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JacksonJsonDeserializer.class);
-    props.put(JacksonJsonDeserializer.TRUSTED_PACKAGES, "com.actisys.*");
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+    props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.actisys.*");
     return props;
   }
 
   @Bean
   public ConsumerFactory<String, CreateOrderEvent> createOrderConsumerFactory() {
     Map<String, Object> props = baseProps();
-    props.put(JacksonJsonDeserializer.VALUE_DEFAULT_TYPE, CreateOrderEvent.class.getName());
+    props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, CreateOrderEvent.class.getName());
     return new DefaultKafkaConsumerFactory<>(props);
   }
 

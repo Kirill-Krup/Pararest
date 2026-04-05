@@ -15,19 +15,22 @@ public class WalletEventConsumer {
 
     private final UserService userService;
 
-    @KafkaListener(topics = "REPLENISHMENT_EVENT", groupId = "user-service-group")
+    @KafkaListener(topics = "REPLENISHMENT_EVENT", groupId = "user-service-group",
+            containerFactory = "createWalletListenerFactory")
     public void handleReplenishmentEvent(CreateWalletEvent event) {
         log.info("handleReplenishmentEvent");
         userService.topUp(event);
     }
 
-    @KafkaListener(topics = "PAYMENT_EVENT", groupId = "user-service-group")
+    @KafkaListener(topics = "PAYMENT_EVENT", groupId = "user-service-group",
+            containerFactory = "createWalletListenerFactory")
     public void handlePaymentEvent(CreateWalletEvent event) {
         log.info("handlePaymentEvent");
         userService.withdrawMoney(event);
     }
 
-    @KafkaListener(topics = "REFUND_EVENT", groupId = "user-service-group")
+    @KafkaListener(topics = "REFUND_EVENT", groupId = "user-service-group",
+            containerFactory = "createRefundListenerFactory")
     public void handleRefundEvent(RefundMoneyEvent event) {
         userService.refundMoneys(event);
     }

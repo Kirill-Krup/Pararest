@@ -116,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
                     Order newOrder = new Order();
                     newOrder.setUserId(userId);
                     newOrder.setStatus(OrderStatus.IN_CART);
-                    return newOrder;
+                    return orderRepository.save(newOrder);
                 });
 
         OrderInfo orderInfo = orderInfoRepository.findByOrderAndMenuItemId(order, menuItemId)
@@ -172,5 +172,11 @@ public class OrderServiceImpl implements OrderService {
         if(event.getPaymentStatus().equals(PaymentStatus.ERROR)) {
             throw new CanNotCancelOrderNowException();
         }
+    }
+
+    @Override
+    public List<OrderDTO> getUserOrders(UUID uuid) {
+        List<Order> allOrders = orderRepository.findAllByUserIdAndStatusNot(uuid, OrderStatus.IN_CART);
+        return allOrders.stream().map(orderMapper::toDTO).collect(Collectors.toList());
     }
 }

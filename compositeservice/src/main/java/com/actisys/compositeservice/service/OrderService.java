@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface OrderService {
     Mono<ResponseEntity<List<FullOrderDTO>>> getFullOrders(String id);
+    Mono<ResponseEntity<FullOrderDTO>> getCart(String id);
 }

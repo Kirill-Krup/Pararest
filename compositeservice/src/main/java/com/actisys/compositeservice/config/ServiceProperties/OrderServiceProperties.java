@@ -18,5 +18,6 @@ public class OrderServiceProperties {
     @Setter
     public static class Endpoints {
         private String getOrdersByUserId;
+        private String getCart;
     }
 }

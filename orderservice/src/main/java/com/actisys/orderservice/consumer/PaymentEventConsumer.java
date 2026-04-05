@@ -13,12 +13,14 @@ public class PaymentEventConsumer {
 
     private final OrderService orderService;
 
-    @KafkaListener(topics = "CREATE_PAYMENT_ORDER_EVENT", groupId = "order-service-group")
+    @KafkaListener(topics = "CREATE_PAYMENT_ORDER_EVENT", groupId = "order-service-group",
+            containerFactory = "createOrderListenerFactory")
     public void handlePaymentStatus(CreateOrderEvent event) {
         orderService.updatePaymentStatus(event);
     }
 
-    @KafkaListener(topics = "REFUND_EVENT_END", groupId = "order-service-group")
+    @KafkaListener(topics = "REFUND_EVENT_END", groupId = "order-service-group",
+            containerFactory = "createOrderListenerFactory")
     public void handleRefundStatus(CreateOrderEvent event) {
         orderService.updateStatusForCancelledOrder(event);
     }

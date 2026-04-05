@@ -28,7 +28,7 @@ public class MenuController {
     }
 
     @GetMapping("/getMenuItemsByIds")
-    public ResponseEntity<List<MenuItemDTO>> getMenuItemsByIds(@RequestBody List<Long> menuIds) {
+    public ResponseEntity<List<MenuItemDTO>> getMenuItemsByIds(@RequestParam List<Long> menuIds) {
         return ResponseEntity.ok().body(menuService.getMenuItemsByIds(menuIds));
     }
 

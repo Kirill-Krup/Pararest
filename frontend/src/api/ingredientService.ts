@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AddIngredientDTO, IngredientDTO } from '../models/IngredientDTO';
-import type { SupplierDTO, SupplyDTO, SupplyRequestDTO } from '../models/SupplyDTO';
+import type { AddSupplyDTO, SupplierDTO, SupplyDTO } from '../models/SupplyDTO';
 
 const API_BASE = 'http://localhost:8080/api/v1';
 
@@ -52,9 +52,9 @@ export const ingredientService = {
         }
     },
 
-    async createSupplyRequest(request: SupplyRequestDTO): Promise<SupplyDTO> {
+    async createSupplyRequest(request: AddSupplyDTO): Promise<SupplyDTO> {
         try {
-            const response = await api.post<SupplyDTO>('/supplies/newRequest', request);
+            const response = await api.post<SupplyDTO>('/supplies/addNew', request);
             return response.data;
         } catch (error) {
             console.error('Ошибка при создании запроса на поставку:', error);

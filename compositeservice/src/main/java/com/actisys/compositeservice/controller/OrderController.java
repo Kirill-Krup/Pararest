@@ -23,4 +23,9 @@ public class OrderController {
     public Mono<ResponseEntity<List<FullOrderDTO>>> getFullOrders(@RequestHeader("X-User-Id") String id) {
         return orderService.getFullOrders(id);
     }
+
+    @GetMapping("/cart")
+    public Mono<ResponseEntity<FullOrderDTO>> getCart(@RequestHeader("X-User-Id") String id) {
+        return orderService.getCart(id);
+    }
 }

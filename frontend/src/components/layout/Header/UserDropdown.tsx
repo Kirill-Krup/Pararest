@@ -100,15 +100,6 @@ const UserDropdown: React.FC = () => {
                         Кошелёк
                     </Link>
 
-                    <Link
-                        to="/settings"
-                        className="dropdown-item"
-                        onClick={handleItemClick}
-                    >
-                        <span className="item-icon">⚙️</span>
-                        Настройки
-                    </Link>
-
                     <div className="dropdown-divider"></div>
 
                     <button

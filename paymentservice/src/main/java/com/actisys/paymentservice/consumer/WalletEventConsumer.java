@@ -15,17 +15,20 @@ public class WalletEventConsumer {
 
     private final PaymentService paymentService;
 
-    @KafkaListener(topics = {"REPLENISHMENT_STATUS", "WITHDRAW_MONEY"}, groupId = "payment-service-group")
+    @KafkaListener(topics = {"REPLENISHMENT_STATUS", "WITHDRAW_MONEY"}, groupId = "payment-service-group",
+            containerFactory = "createReplenishmentListenerFactory")
     public void handleNewReplenishmentStatus(CreateReplenishmentEvent event) {
         paymentService.changePaymentStatus(event);
     }
 
-    @KafkaListener(topics = "CREATE_ORDER_CANCEL_EVENT", groupId = "payment-service-group")
+    @KafkaListener(topics = "CREATE_ORDER_CANCEL_EVENT", groupId = "payment-service-group",
+            containerFactory = "createPaymentListenerFactory")
     public void handleRefundMoneys(CreatePaymentEvent event){
         paymentService.cancelOrder(event);
     }
 
-    @KafkaListener(topics = "REFUND_STATUS_EVENT", groupId = "payment-service-group")
+    @KafkaListener(topics = "REFUND_STATUS_EVENT", groupId = "payment-service-group",
+            containerFactory = "refundListenerFactory")
     public void handleRefundMoney(RefundEvent event){
         paymentService.refundMoney(event);
     }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { type MenuItemFormData, menuService } from '../../api/menuservice';
+import { type MenuItemFormData } from '../../api/menuservice';
 import { ingredientService } from '../../api/ingredientService';
 import '../../styles/admin/MenuTableCss.css';
 import type { MenuItemDTO } from "../../models/MenuItemDTO";
@@ -15,7 +15,7 @@ interface IngredientSelection {
 interface MenuItemModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSave: () => Promise<void>;
+    onSave: (formData: MenuItemFormData) => Promise<void>;
     item: MenuItemDTO | null;
     categories: string[];
 }
@@ -155,9 +155,7 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({
         try {
             setSaving(true);
 
-            if (item) {
-                await menuService.updateMenuItem(item.id, formData);
-            } else {
+            if (!item) {
                 const ingredientsMap: Record<number, number> = {};
                 ingredients.forEach(i => {
                     if (i.quantity > 0) {
@@ -168,7 +166,7 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({
                 await compositeservice.createMenuItemWithRecipe(formData, ingredientsMap);
             }
 
-            await onSave();
+            await onSave(formData);
             onClose();
         } catch (error) {
             console.error('Ошибка сохранения:', error);

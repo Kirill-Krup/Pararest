@@ -5,15 +5,7 @@ import {inventoryservice} from "../api/inventoryservice.ts";
 import type { MenuItemDTO, CategoryDTO } from '../models/types/menu.types';
 import '../styles/MenuSection.css';
 import type {RecipeDTO} from "../models/types/recipe.types.ts";
-
-interface CartItem {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
-    imageUrl: string;
-}
-
+import {orderService} from "../api/orderservice.ts";
 
 const MenuSection: React.FC = () => {
     const { isAuthenticated } = useAuth();
@@ -79,34 +71,19 @@ const MenuSection: React.FC = () => {
         fetchRecipe(item.id);
     };
 
-    const handleAddToCart = (item: MenuItemDTO) => {
+    const handleAddToCart = async (item: MenuItemDTO) => {
         if (!isAuthenticated) {
             showNotification('Пожалуйста, войдите в систему для добавления товаров в корзину');
             return;
         }
 
-        const existingCart = sessionStorage.getItem('cart');
-        let cart: CartItem[] = existingCart ? JSON.parse(existingCart) : [];
-
-        const existingItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
-
-        if (existingItemIndex !== -1) {
-            cart[existingItemIndex].quantity += 1;
-        } else {
-            cart.push({
-                id: item.id,
-                name: item.name,
-                price: item.price,
-                quantity: 1,
-                imageUrl: item.imageUrl
-            });
+        try {
+            await orderService.addToCart(item.id);
+            window.dispatchEvent(new Event('cartUpdated'));
+            showNotification(`${item.name} добавлен в корзину`);
+        } catch (err) {
+            showNotification('Не удалось добавить товар в корзину');
         }
-
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-
-        window.dispatchEvent(new Event('cartUpdated'));
-
-        showNotification(`${item.name} добавлен в корзину`);
     };
 
     const showNotification = (message: string) => {

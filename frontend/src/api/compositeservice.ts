@@ -43,5 +43,5 @@ export const compositeservice = {
             console.error('Ошибка при получении корзины:', error);
             throw error;
         }
-    },
+    }
 }

@@ -13,7 +13,7 @@ const api = axios.create({
 export const inventoryservice = {
     async getMenuItemRecipe(id: number): Promise<RecipeDTO[]> {
         try {
-            const response = await api.put<RecipeDTO[]>(`/recipes/getRecipeByMenuId/${id}`);
+            const response = await api.get<RecipeDTO[]>(`/recipes/getRecipeByMenuId/${id}`);
             return response.data;
         } catch (error) {
             console.error('Ошибка при получении рецепта:', error);

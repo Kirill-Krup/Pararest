@@ -83,13 +83,15 @@ public class MenuServiceClientImpl implements MenuServiceClient {
     }
 
     @Override
-    public Mono<List<MenuItemDTO>> getDishesById(List<Long> ids) {
-        String url = menuProperties.getHost() + menuProperties.getEndpoints().getGetDishesByIds() + ids;
-        log.debug("Getting dish with ID: {} from menu service", ids);
+    public Mono<List<MenuItemDTO>> getDishesByIds(List<Long> ids) {
         return webClient.get()
-                .uri(url)
+                .uri(uriBuilder -> uriBuilder
+                        .path(menuProperties.getEndpoints().getGetDishesByIds())
+                        .queryParam("menuIds", ids)
+                        .build())
                 .retrieve()
-                .bodyToMono(List.class)
+                .bodyToFlux(MenuItemDTO.class)
+                .collectList()
                 .timeout(Duration.ofSeconds(5))
                 .doOnSuccess(dish -> log.info("Dish {} retrieved successfully", ids))
                 .doOnError(e -> log.error("Failed to get dish {}: {}", ids, e.getMessage()));

@@ -7,6 +7,8 @@ import AdminPage from "./pages/AdminPage.tsx";
 import MenuPage from "./pages/MenuPage.tsx";
 import CartPage from "./pages/CartPage.tsx";
 import ReplenishmentPage from "./pages/ReplenishmentPage.tsx";
+import OrdersPage from "./pages/OrdersPage.tsx";
+import ProfilePage from "./pages/ProfilePage.tsx";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
                 <Route path={"/menu"} element={<MenuPage/>}/>
                 <Route path={"/cart"} element={<CartPage/>}/>
                 <Route path={"/wallet"} element={<ReplenishmentPage/>}/>
+                <Route path={"/orders"} element={<OrdersPage/>}/>
+                <Route path={"/profile"} element={<ProfilePage/>}/>
             </Routes>
         </AuthProvider>
     </BrowserRouter>

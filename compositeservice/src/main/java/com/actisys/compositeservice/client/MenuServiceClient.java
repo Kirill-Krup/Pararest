@@ -11,5 +11,5 @@ public interface MenuServiceClient {
     Mono<Long> createDish(AddMenuItemDTO dishDto, String username);
     Mono<Void> deleteDish(Long dishId, String username);
 
-    Mono<List<MenuItemDTO>> getDishesById(List<Long> ids);
+    Mono<List<MenuItemDTO>> getDishesByIds(List<Long> ids);
 }

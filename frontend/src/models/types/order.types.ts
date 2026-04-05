@@ -33,10 +33,10 @@ export interface OrderInfoDTO {
 }
 
 export interface CreateOrderDTO {
-    type: OrderType;
-    paymentType: PaymentType;
+    orderType: OrderType,
+    totalPrice: number,
+    paymentType: PaymentType,
     userRequest?: string;
-    deliveryTime?: string;
 }
 
 
@@ -46,7 +46,8 @@ export enum OrderStatus {
     PENDING = 'PENDING',
     COMPLETED = 'COMPLETED',
     PREPARING = 'PREPARING',
-    IN_CART = 'IN_CART'
+    IN_CART = 'IN_CART',
+    DISCARDED = 'DISCARDED'
 }
 
 export enum OrderType {

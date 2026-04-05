@@ -42,9 +42,9 @@ export const orderService = {
     /**
      * Получить все заказы пользователя
      */
-    async getUserOrders(userId: string): Promise<OrderDTO[]> {
+    async getUserOrders(): Promise<OrderDTO[]> {
         try {
-            const response = await api.get<OrderDTO[]>(`/orders/user/${userId}`);
+            const response = await api.get<OrderDTO[]>(`/orders`);
             return response.data;
         } catch (error) {
             console.error('Ошибка при получении заказов пользователя:', error);
@@ -59,7 +59,7 @@ export const orderService = {
      */
     async createOrder(data: CreateOrderDTO): Promise<OrderDTO> {
         try {
-            const response = await api.post<OrderDTO>('/orders', data);
+            const response = await api.post<OrderDTO>('/orders/user', data);
             return response.data;
         } catch (error) {
             console.error('Ошибка при создании заказа:', error);
@@ -120,7 +120,7 @@ export const orderService = {
      */
     async cancelOrder(orderId: number): Promise<void> {
         try {
-            await api.patch(`/orders/${orderId}/cancel`);
+            await api.put(`/orders/cancelOrder/${orderId}`);
         } catch (error) {
             console.error('Ошибка при отмене заказа:', error);
             throw error;

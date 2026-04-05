@@ -92,7 +92,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuItemDTO> getMenuItemsByIds(List<Long> menuIds) {
-        List<MenuItem> menuItems = menuRepository.findAllById(menuIds);
+        List<MenuItem> menuItems = menuRepository.findAllByIdIn(menuIds);
         return menuItems.stream().map(menuItemMapper::toDto).collect(Collectors.toList());
     }
 }

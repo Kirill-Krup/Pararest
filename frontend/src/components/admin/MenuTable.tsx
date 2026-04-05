@@ -22,7 +22,7 @@ const MenuTable: React.FC = () => {
         try {
             setLoading(true);
             setError(null);
-            const data = await menuService.getAllMenuItems();
+            const data = await menuService.getAllMenuItemsForAdmin();
             setMenuItems(data);
 
             const uniqueCategories = Array.from(new Set(data.map(item => item.category)));
@@ -90,7 +90,7 @@ const MenuTable: React.FC = () => {
         }
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (id: number) => {
         if (!window.confirm('Вы уверены, что хотите удалить эту позицию из меню?')) return;
         try {
             await menuService.deleteMenuItem(id);
@@ -106,7 +106,7 @@ const MenuTable: React.FC = () => {
         }
     };
 
-    const handleToggleActive = async (id: string) => {
+    const handleToggleActive = async (id: number) => {
         try {
             const updated = await menuService.toggleActive(id);
             setMenuItems(prev => prev.map(item =>
@@ -261,7 +261,6 @@ const MenuTable: React.FC = () => {
                                     <td>
                                         <div className="manager-info">
                                             <span className="manager-name">{item.addedByManagerName}</span>
-                                            <span className="manager-id">ID: {item.addedByManagerId}</span>
                                         </div>
                                     </td>
                                     <td>{formatDate(item.createdAt)}</td>

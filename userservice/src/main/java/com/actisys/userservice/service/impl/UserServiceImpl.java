@@ -7,6 +7,7 @@ import com.actisys.kafkacommunication.wallet.CreateWalletEvent;
 import com.actisys.kafkacommunication.wallet.RefundEvent;
 import com.actisys.kafkacommunication.wallet.RefundMoneyEvent;
 import com.actisys.kafkacommunication.wallet.WithdrawEvent;
+import com.actisys.userservice.dto.UpdateUserProfileDTO;
 import com.actisys.userservice.dto.UserDTO;
 import com.actisys.userservice.exception.NotEnoughMoneyException;
 import com.actisys.userservice.exception.UserNotFoundException;
@@ -92,6 +93,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO updateProfile(UUID uuid, UpdateUserProfileDTO updateUserProfileDTO) {
+        User user = userRepository.findById(uuid).orElseThrow(() -> new UserNotFoundException(uuid));
+        user.setEmail(updateUserProfileDTO.getEmail());
+        user.setPhone(updateUserProfileDTO.getPhone());
+        user.setRoomNumber(updateUserProfileDTO.getRoomNumber());
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    @Override
     public void topUp(CreateWalletEvent event) {
         User user = userRepository.findById(event.getUserId()).orElseThrow(
                 ()->new UserNotFoundException(event.getUserId()));
@@ -139,5 +149,14 @@ public class UserServiceImpl implements UserService {
                 .paymentStatus(PaymentStatus.SUCCESS)
                 .build();
         kafkaTemplate.send("REFUND_STATUS_EVENT", statEvent);
+    }
+
+    @Override
+    public Integer getMyRoomNumber(UUID uuid) {
+        User user = userRepository.findById(uuid).orElseThrow(()->new UserNotFoundException(uuid));
+        if(user.getRoomNumber() == null){
+            return 0;
+        }
+        return user.getRoomNumber();
     }
 }

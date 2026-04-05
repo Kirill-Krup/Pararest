@@ -1,0 +1,39 @@
+.operations-section {
+    background: #fff;
+    border-radius: 12px;
+}
+
+.operations-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.operations-header h2 {
+    margin: 0;
+    font-size: 1.35rem;
+}
+
+.operations-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.operations-table th,
+.operations-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.operations-table th {
+    color: #334155;
+    font-weight: 600;
+    background: #f8fafc;
+}
+
+.admin-lite-state {
+    padding: 12px 0;
+    color: #475569;
+}

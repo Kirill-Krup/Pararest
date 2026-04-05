@@ -12,7 +12,8 @@ public class OrderEventConsumer {
 
     private final PaymentService paymentService;
 
-    @KafkaListener(topics = "CREATE_ORDER_PAYMENT_EVENT", groupId = "payment-service-group")
+    @KafkaListener(topics = "CREATE_ORDER_PAYMENT_EVENT", groupId = "payment-service-group",
+            containerFactory = "createPaymentListenerFactory")
     public void handleCreateNewOrder(CreatePaymentEvent event) {
         paymentService.createNewPayment(event);
     }
