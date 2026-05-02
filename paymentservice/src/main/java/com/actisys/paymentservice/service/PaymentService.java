@@ -6,6 +6,7 @@ import com.actisys.kafkacommunication.wallet.RefundEvent;
 import com.actisys.paymentservice.dto.CreateReplenishment;
 import com.actisys.paymentservice.dto.PaymentDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,4 +24,6 @@ public interface PaymentService {
     void cancelOrder(CreatePaymentEvent event);
 
     void refundMoney(RefundEvent event);
+
+    BigDecimal getTotalAmount();
 }

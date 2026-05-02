@@ -43,28 +43,16 @@ export const orderService = {
      * Получить все заказы пользователя
      */
     async getUserOrders(): Promise<OrderDTO[]> {
-        try {
-            const response = await api.get<OrderDTO[]>(`/orders`);
-            return response.data;
-        } catch (error) {
-            console.error('Ошибка при получении заказов пользователя:', error);
-            throw error;
-        }
+        const response = await api.get<OrderDTO[]>('/orders/user');
+        return response.data;
     },
-
-
 
     /**
      * Создать новый заказ (из корзины)
      */
     async createOrder(data: CreateOrderDTO): Promise<OrderDTO> {
-        try {
-            const response = await api.post<OrderDTO>('/orders/user', data);
-            return response.data;
-        } catch (error) {
-            console.error('Ошибка при создании заказа:', error);
-            throw error;
-        }
+        const response = await api.post<OrderDTO>('/orders', data);
+        return response.data;
     },
 
     /**

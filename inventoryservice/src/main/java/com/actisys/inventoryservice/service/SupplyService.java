@@ -5,6 +5,7 @@ import com.actisys.inventoryservice.dto.SupplyDTO;
 import com.actisys.inventoryservice.model.SupplyStatus;
 import org.jspecify.annotations.Nullable;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface SupplyService {
@@ -15,4 +16,6 @@ public interface SupplyService {
     SupplyDTO editSupply(Long id, SupplyStatus supplyStatus);
 
     void deleteSupply(Long id);
+
+    BigDecimal getTotalAmount();
 }

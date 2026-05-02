@@ -16,4 +16,6 @@ public class MenuItemDTO {
     private CategoryDTO category;
     private String imageUrl;
     private Integer preparationTime;
+    private Boolean active;
+    private String adderName;
 }

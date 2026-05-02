@@ -3,6 +3,19 @@ import { orderService } from '../../api/orderservice.ts';
 import { type OrderDTO } from '../../models/types/order.types.ts';
 import '../../styles/admin/OperationsTables.css';
 
+const statusLabels: Record<string, { label: string; className: string }> = {
+    PENDING:    { label: 'Ожидает',    className: 'status-pending' },
+    PROCESSING: { label: 'В обработке', className: 'status-processing' },
+    COMPLETED:  { label: 'Выполнен',   className: 'status-completed' },
+    CANCELLED:  { label: 'Отменён',    className: 'status-cancelled' },
+};
+
+const paymentStatusLabels: Record<string, { label: string; className: string }> = {
+    PAID:    { label: 'Оплачен',  className: 'pay-paid' },
+    UNPAID:  { label: 'Не оплачен', className: 'pay-unpaid' },
+    REFUNDED:{ label: 'Возврат',  className: 'pay-refunded' },
+};
+
 const OrdersTable: React.FC = () => {
     const [orders, setOrders] = useState<OrderDTO[]>([]);
     const [loading, setLoading] = useState(true);
@@ -32,20 +45,37 @@ const OrdersTable: React.FC = () => {
     };
 
     if (loading && orders.length === 0) {
-        return <div className="admin-lite-state">Загрузка заказов...</div>;
+        return (
+            <div className="ops-section ops-section--loading">
+                <div className="ops-spinner" />
+                <p>Загрузка заказов...</p>
+            </div>
+        );
+    }
+
+    if (error && orders.length === 0) {
+        return (
+            <div className="ops-section ops-section--error">
+                <p className="ops-error-msg">{error}</p>
+                <button onClick={fetchOrders} className="ops-retry-btn">Повторить</button>
+            </div>
+        );
     }
 
     return (
-        <div className="operations-section">
-            <div className="operations-header">
-                <h2>Заказы</h2>
-                <button onClick={fetchOrders} className="refresh-btn">Обновить</button>
+        <div className="ops-section">
+            <div className="ops-header">
+                <div className="ops-title-group">
+                    <h2 className="ops-title">🧾 Заказы</h2>
+                    <span className="ops-count">{orders.length} записей</span>
+                </div>
+                <button onClick={fetchOrders} className="ops-refresh-btn">🔄 Обновить</button>
             </div>
 
-            {error && <div className="error-message">{error}</div>}
+            {error && <div className="ops-error-inline">{error}</div>}
 
             <div className="table-responsive">
-                <table className="operations-table">
+                <table className="ops-table">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -61,24 +91,47 @@ const OrdersTable: React.FC = () => {
                     <tbody>
                     {orders.length === 0 ? (
                         <tr>
-                            <td colSpan={8} className="empty-message">Заказы не найдены</td>
+                            <td colSpan={8} className="ops-empty">Заказы не найдены</td>
                         </tr>
                     ) : (
-                        orders.map((order) => (
-                            <tr key={order.id}>
-                                <td>{order.id}</td>
-                                <td>{order.userId}</td>
-                                <td>{order.status}</td>
-                                <td>{order.type}</td>
-                                <td>{order.totalPrice.toLocaleString('ru-RU')} ₽</td>
-                                <td>{order.paymentType} / {order.paymentStatus}</td>
-                                <td>{order.items?.length ?? 0}</td>
-                                <td>{formatDate(order.orderTime)}</td>
-                            </tr>
-                        ))
+                        orders.map((order) => {
+                            const status = statusLabels[order.status] ?? { label: order.status, className: '' };
+                            const payStatus = paymentStatusLabels[order.paymentStatus] ?? { label: order.paymentStatus, className: '' };
+                            return (
+                                <tr key={order.id}>
+                                    <td className="ops-id">#{order.id}</td>
+                                    <td className="ops-muted">{order.userId}</td>
+                                    <td>
+                                            <span className={`ops-badge ${status.className}`}>
+                                                {status.label}
+                                            </span>
+                                    </td>
+                                    <td className="ops-muted">{order.type ?? '—'}</td>
+                                    <td className="ops-price">
+                                        {order.totalPrice != null
+                                            ? order.totalPrice.toLocaleString('ru-RU') + ' BYN'
+                                            : '—'}
+                                    </td>
+                                    <td>
+                                        <div className="ops-pay-cell">
+                                            <span className="ops-muted">{order.paymentType}</span>
+                                            <span className={`ops-badge ${payStatus.className}`}>
+                                                    {payStatus.label}
+                                                </span>
+                                        </div>
+                                    </td>
+                                    <td className="ops-center">{order.items?.length ?? 0}</td>
+                                    <td className="ops-muted">{formatDate(order.orderTime)}</td>
+                                </tr>
+                            );
+                        })
                     )}
                     </tbody>
                 </table>
+            </div>
+
+            <div className="ops-footer">
+                Показано: {orders.length} заказов
             </div>
         </div>
     );

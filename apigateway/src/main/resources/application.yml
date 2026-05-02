@@ -26,8 +26,14 @@ springdoc:
         url: "/v3/api-docs/menu"
       - name: "4. Inventory Service"
         url: "/v3/api-docs/inventory"
-      - name: "5. Composite Service"
+      - name: "5. Orders Service"
+        url: "/v3/api-docs/orders"
+      - name: "6. Payments Service"
+        url: "/v3/api-docs/payments"
+      - name: "7. Composite Service"
         url: "/v3/api-docs/composite"
+      - name: "8. Analytics Service"
+        url: "/v3/api-docs/analytics"
 
 logging:
   level:

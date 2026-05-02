@@ -1,5 +1,6 @@
 package com.actisys.authservice.repository;
 
+import com.actisys.authservice.model.AuthProvider;
 import com.actisys.authservice.model.Credential;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,6 @@ public interface AuthRepository extends JpaRepository<Credential, UUID> {
     boolean existsByLogin(String login);
 
     boolean existsByEmail(String email);
+
+    Optional<Credential> findByProviderIdAndAuthProvider(String providerId, AuthProvider authProvider);
 }

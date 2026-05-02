@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.UUID;
 
 @Slf4j
@@ -79,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
         try{
             log.info("Sending to userservice: {}", userRequest.getId());
             log.info("User in request: {}", userRequest.getUser().getLogin());
-            userServiceClient.createUser(userRequest);
+            userServiceClient.createUser(userRequest).block(Duration.ofSeconds(15));
         } catch (UserServiceException e){
             log.error(e.getMessage());
             authRepository.delete(credential);

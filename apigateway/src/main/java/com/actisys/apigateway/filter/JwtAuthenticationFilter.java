@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
     log.debug("Processing request: {}", path);
 
-    if (isPublicEndpoint(path)) {
+    if (isOAuthFlow(path) || isPublicEndpoint(path)) {
       log.debug("Public endpoint, skipping JWT validation: {}", path);
       return chain.filter(exchange);
     }
@@ -119,6 +119,10 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
       username = claims.getSubject();
     }
     return username;
+  }
+
+  private boolean isOAuthFlow(String path) {
+    return path.startsWith("/oauth2/") || path.startsWith("/login/oauth2/");
   }
 
   private boolean isPublicEndpoint(String path) {

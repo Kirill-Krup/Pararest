@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -129,5 +130,11 @@ public class PaymentServiceImpl implements PaymentService {
                 .paymentStatus(event.getPaymentStatus())
                 .build();
         kafkaTemplate.send("REFUND_EVENT_END", ordEvent);
+    }
+
+    @Override
+    public BigDecimal getTotalAmount() {
+        List<Payment> allPayments = paymentRepository.findAll();
+        return allPayments.stream().map(Payment::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

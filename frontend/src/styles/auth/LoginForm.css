@@ -53,7 +53,61 @@
     font-size: 0.75rem;
     margin-top: 5px;
 }
+/* Добавь эти стили в LoginForm.css и RegisterForm.css */
 
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.github-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 16px;
+    background: #24292f;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.github-button:hover:not(:disabled) {
+    background: #383f47;
+}
+
+.github-button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.github-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.github-icon {
+    width: 20px;
+    height: 20px;
+    fill: #ffffff;
+    flex-shrink: 0;
+}
 /* Чекбокс "Запомнить меня" */
 .form-group.checkbox {
     flex-direction: row;

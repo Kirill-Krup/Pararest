@@ -6,10 +6,9 @@ export interface MenuItemDTO {
     description: string;
     price: number;
     category: string;
-    recipe?: string | null;
     imageUrl?: string | null;
-    isActive: boolean;
-    addedByManagerName?: string;
+    active: boolean;
+    adderName: string;
     createdAt: string;
     updatedAt?: string;
 }
@@ -39,7 +38,7 @@ export function createAddMenuItemRequest(
             price: formData.price,
             category: formData.category,
             imageUrl: formData.imageUrl,
-            isActive: formData.isActive
+            isActive: formData.active
         },
         ingredientsMap
     };

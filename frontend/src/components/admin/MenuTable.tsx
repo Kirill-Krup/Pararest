@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { menuService, type MenuItemFormData } from '../../api/menuservice';
-import { type MenuItemDTO } from '../../models/MenuItemDTO';
+import { type MenuItemDTO, type CategoryDTO } from '../../models/types/menu.types.ts';
 import MenuItemModal from '../admin/MenuItemModal.tsx';
 import RecipeModal from '../admin/RecipeModal';
 import '../../styles/admin/MenuTableCss.css';
@@ -8,7 +8,7 @@ import '../../styles/admin/MenuTableCss.css';
 const MenuTable: React.FC = () => {
     const [menuItems, setMenuItems] = useState<MenuItemDTO[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null); // теперь используем
+    const [error, setError] = useState<string | null>(null);
     const [categoryFilter, setCategoryFilter] = useState<string>('all');
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [categories, setCategories] = useState<string[]>([]);
@@ -18,18 +18,76 @@ const MenuTable: React.FC = () => {
     const [selectedItem, setSelectedItem] = useState<MenuItemDTO | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
 
+    // Функция нормализации данных
+    const normalizeMenuItem = (item: any): MenuItemDTO => {
+        // Логируем сырые данные
+        console.log('Raw item from server:', item);
+        console.log('Category field:', item.category, typeof item.category);
+        console.log('AdderName field:', item.adderName);
+        console.log('Active field:', item.active, typeof item.active);
+
+        // Нормализуем категорию
+        let category: CategoryDTO;
+        if (typeof item.category === 'string') {
+            category = { name: item.category };
+        } else if (item.category && typeof item.category === 'object') {
+            category = {
+                name: item.category.name || item.category.categoryName || 'Без категории'
+            };
+        } else {
+            category = { name: 'Без категории' };
+        }
+
+        // Нормализуем active
+        const active = item.active === true ||
+            item.active === 'true' ||
+            item.active === 1 ||
+            item.isActive === true ||
+            item.isActive === 'true' ||
+            item.isActive === 1;
+
+        return {
+            id: item.id,
+            name: item.name || '',
+            description: item.description || '',
+            price: Number(item.price) || 0,
+            category: category,
+            imageUrl: item.imageUrl || null,
+            active: active,
+            adderName: item.adderName ||
+                item.addedByManagerName ||
+                item.managerName ||
+                item.addedBy?.name ||
+                item.manager?.name ||
+                'Не указан',
+            createdAt: item.createdAt || new Date().toISOString(),
+            updatedAt: item.updatedAt
+        };
+    };
+
     const fetchMenu = async () => {
         try {
             setLoading(true);
             setError(null);
             const data = await menuService.getAllMenuItemsForAdmin();
-            setMenuItems(data);
 
-            const uniqueCategories = Array.from(new Set(data.map(item => item.category)));
+            console.log('Raw data from server:', data);
+
+            // Нормализуем все элементы
+            const normalizedData = data.map(normalizeMenuItem);
+
+            console.log('Normalized data:', normalizedData);
+
+            setMenuItems(normalizedData);
+
+            // Извлекаем имена категорий
+            const uniqueCategories = Array.from(
+                new Set(normalizedData.map(item => item.category.name))
+            );
             setCategories(uniqueCategories.sort());
         } catch (err) {
             setError('Не удалось загрузить меню. Попробуйте позже.');
-            console.error(err);
+            console.error('Error fetching menu:', err);
         } finally {
             setLoading(false);
         }
@@ -45,16 +103,16 @@ const MenuTable: React.FC = () => {
             const matchesSearch =
                 item.name.toLowerCase().includes(query) ||
                 item.description.toLowerCase().includes(query) ||
-                item.category.toLowerCase().includes(query);
+                item.category.name.toLowerCase().includes(query);
             if (!matchesSearch) return false;
         }
 
-        if (categoryFilter !== 'all' && item.category !== categoryFilter) {
+        if (categoryFilter !== 'all' && item.category.name !== categoryFilter) {
             return false;
         }
 
-        if (statusFilter === 'active' && !item.isActive) return false;
-        if (statusFilter === 'inactive' && item.isActive) return false;
+        if (statusFilter === 'active' && !item.active) return false;
+        if (statusFilter === 'inactive' && item.active) return false;
 
         return true;
     });
@@ -73,15 +131,17 @@ const MenuTable: React.FC = () => {
         try {
             if (selectedItem) {
                 const updated = await menuService.updateMenuItem(selectedItem.id, formData);
+                const normalizedUpdated = normalizeMenuItem(updated);
                 setMenuItems(prev => prev.map(item =>
-                    item.id === updated.id ? updated : item
+                    item.id === normalizedUpdated.id ? normalizedUpdated : item
                 ));
             } else {
                 const created = await menuService.createMenuItem(formData);
-                setMenuItems(prev => [...prev, created]);
+                const normalizedCreated = normalizeMenuItem(created);
+                setMenuItems(prev => [...prev, normalizedCreated]);
 
-                if (!categories.includes(created.category)) {
-                    setCategories(prev => [...prev, created.category].sort());
+                if (!categories.includes(normalizedCreated.category.name)) {
+                    setCategories(prev => [...prev, normalizedCreated.category.name].sort());
                 }
             }
         } catch (err) {
@@ -97,7 +157,9 @@ const MenuTable: React.FC = () => {
             setMenuItems(prev => prev.filter(item => item.id !== id));
 
             const remainingCategories = Array.from(new Set(
-                menuItems.filter(item => item.id !== id).map(item => item.category)
+                menuItems
+                    .filter(item => item.id !== id)
+                    .map(item => item.category.name)
             ));
             setCategories(remainingCategories.sort());
         } catch (err) {
@@ -109,8 +171,9 @@ const MenuTable: React.FC = () => {
     const handleToggleActive = async (id: number) => {
         try {
             const updated = await menuService.toggleActive(id);
+            const normalizedUpdated = normalizeMenuItem(updated);
             setMenuItems(prev => prev.map(item =>
-                item.id === id ? updated : item
+                item.id === id ? normalizedUpdated : item
             ));
         } catch (err) {
             alert('Ошибка при изменении статуса');
@@ -128,7 +191,12 @@ const MenuTable: React.FC = () => {
     };
 
     const formatDate = (dateStr: string) => {
-        return new Date(dateStr).toLocaleDateString('ru-RU');
+        if (!dateStr) return '—';
+        try {
+            return new Date(dateStr).toLocaleDateString('ru-RU');
+        } catch {
+            return '—';
+        }
     };
 
     if (loading && menuItems.length === 0) {
@@ -235,7 +303,7 @@ const MenuTable: React.FC = () => {
                             </tr>
                         ) : (
                             filteredItems.map(item => (
-                                <tr key={item.id} className={!item.isActive ? 'inactive-row' : ''}>
+                                <tr key={item.id} className={!item.active ? 'inactive-row' : ''}>
                                     <td>
                                         {item.imageUrl ? (
                                             <img
@@ -243,7 +311,15 @@ const MenuTable: React.FC = () => {
                                                 alt={item.name}
                                                 className="menu-thumbnail"
                                                 onError={(e) => {
-                                                    (e.target as HTMLImageElement).style.display = 'none';
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.style.display = 'none';
+                                                    const parent = target.parentElement;
+                                                    if (parent) {
+                                                        const span = document.createElement('span');
+                                                        span.className = 'no-image';
+                                                        span.innerHTML = '📷';
+                                                        parent.appendChild(span);
+                                                    }
                                                 }}
                                             />
                                         ) : (
@@ -251,23 +327,27 @@ const MenuTable: React.FC = () => {
                                         )}
                                     </td>
                                     <td>
-                                        <div className="item-name">{item.name}</div>
-                                        <div className="item-description">{item.description}</div>
+                                        <div className="item-name">{item.name || '—'}</div>
+                                        <div className="item-description">{item.description || '—'}</div>
                                     </td>
                                     <td>
-                                        <span className="category-badge">{item.category}</span>
+                                        <span className="category-badge">
+                                            {item.category?.name || '—'}
+                                        </span>
                                     </td>
                                     <td className="price-cell">{formatPrice(item.price)}</td>
                                     <td>
                                         <div className="manager-info">
-                                            <span className="manager-name">{item.addedByManagerName}</span>
+                                            <span className="manager-name">
+                                                {item.adderName || '—'}
+                                            </span>
                                         </div>
                                     </td>
                                     <td>{formatDate(item.createdAt)}</td>
                                     <td>
-                                            <span className={`status-badge ${item.isActive ? 'active' : 'inactive'}`}>
-                                                {item.isActive ? '✅ Активен' : '⛔ Неактивен'}
-                                            </span>
+                                        <span className={`status-badge ${item.active ? 'active' : 'inactive'}`}>
+                                            {item.active ? '✅ Активен' : '⛔ Неактивен'}
+                                        </span>
                                     </td>
                                     <td>
                                         <div className="action-buttons">
@@ -287,10 +367,10 @@ const MenuTable: React.FC = () => {
                                             </button>
                                             <button
                                                 onClick={() => handleToggleActive(item.id)}
-                                                className={`toggle-btn ${item.isActive ? 'deactivate' : 'activate'}`}
-                                                title={item.isActive ? 'Деактивировать' : 'Активировать'}
+                                                className={`toggle-btn ${item.active ? 'deactivate' : 'activate'}`}
+                                                title={item.active ? 'Деактивировать' : 'Активировать'}
                                             >
-                                                {item.isActive ? '🔴' : '🟢'}
+                                                {item.active ? '🔴' : '🟢'}
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(item.id)}

@@ -33,7 +33,7 @@ export interface MenuItemFormData {
     category: string;
     recipe?: string | null;
     imageUrl?: string | null;
-    isActive: boolean;
+    active: boolean;
 }
 
 const toAddMenuItemDto = (data: MenuItemFormData): AddMenuItemDTO => ({
@@ -50,9 +50,10 @@ const toAdminMenuItem = (item: PublicMenuItemDTO): AdminMenuItemDTO => ({
     name: item.name,
     description: item.description,
     price: item.price,
-    category: item.category?.name ?? '',
+    category: item.category.name?? '',
     imageUrl: item.imageUrl,
-    isActive: true,
+    active: item.active,
+    adderName: item.adderName,
     createdAt: new Date().toISOString()
 });
 

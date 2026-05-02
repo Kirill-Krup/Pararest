@@ -1,489 +1,450 @@
-/* MenuTableCss.css */
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.modal-content {
+.menu-section {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 700px;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: slideUp 0.3s ease;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    margin-left: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-@keyframes slideUp {
-    from {
-        transform: translateY(30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.modal-header {
+.menu-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid #e9ecef;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 12px 12px 0 0;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
-.modal-header h3 {
-    margin: 0;
-    color: white;
-    font-size: 1.5rem;
+.menu-header h2 {
+    font-size: 1.6rem;
     font-weight: 600;
+    color: #1e293b;
+    margin: 0;
 }
 
-.close-btn {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    font-size: 1.8rem;
+.refresh-btn {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 40px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
-    width: 36px;
-    height: 36px;
+    white-space: nowrap;
+}
+
+.refresh-btn:hover {
+    background: white;
+    border-color: #94a3b8;
+}
+
+/* Toolbar: кнопка добавить + поиск */
+.menu-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.add-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.add-btn:hover {
+    background: #1d4ed8;
+}
+
+.search-wrapper {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    color: #334155;
+    background: #f8fafc;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.search-input:focus {
+    border-color: #2563eb;
+    background: white;
+}
+
+/* Фильтры */
+.filters-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group label {
+    font-size: 0.9rem;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    font-size: 0.9rem;
+    color: #1e293b;
+    cursor: pointer;
+    min-width: 140px;
+}
+
+.results-info {
+    margin-left: auto;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+/* Таблица */
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 14px;
+    border: 1px solid #f1f5f9;
+    margin-bottom: 16px;
+}
+
+.menu-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    background: white;
+}
+
+.menu-table th {
+    background: #f8fafc;
+    color: #1e293b;
+    font-weight: 600;
+    padding: 16px 12px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.menu-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.menu-table tbody tr:hover {
+    background-color: #fafcff;
+}
+
+/* Неактивная строка */
+.menu-table .inactive-row {
+    background-color: #fffbfa;
+    opacity: 0.8;
+}
+
+.menu-table .inactive-row td {
+    color: #64748b;
+}
+
+/* Миниатюра фото */
+.menu-thumbnail {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    display: block;
+}
+
+.no-image {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    transition: all 0.2s;
-    line-height: 1;
-}
-
-.close-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: rotate(90deg);
-}
-
-.modal-form {
-    padding: 2rem;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.95rem;
-}
-
-.form-group input[type="text"],
-.form-group input[type="number"],
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e9ecef;
+    width: 48px;
+    height: 48px;
+    background: #f1f5f9;
     border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.2s;
-    background-color: #f8f9fa;
-}
-
-.form-group input[type="text"]:hover,
-.form-group input[type="number"]:hover,
-.form-group textarea:hover,
-.form-group select:hover {
-    border-color: #ced4da;
-    background-color: white;
-}
-
-.form-group input[type="text"]:focus,
-.form-group input[type="number"]:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: #667eea;
-    background-color: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.form-group input.error,
-.form-group textarea.error,
-.form-group select.error {
-    border-color: #dc3545;
-    background-color: #fff5f5;
-}
-
-.form-group input.error:focus,
-.form-group textarea.error:focus,
-.form-group select.error:focus {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
-}
-
-.error-message {
-    color: #dc3545;
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
-    display: block;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-/* Чекбокс */
-.form-group.checkbox {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.form-group.checkbox label {
-    margin-bottom: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-}
-
-.form-group.checkbox input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: #667eea;
-}
-
-/* Секция ингредиентов */
-.ingredients-section {
-    background-color: #f8f9fa;
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.ingredients-section h4 {
-    margin: 0 0 1rem 0;
-    color: #495057;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.ingredients-section h4::before {
-    content: '🥗';
+    border: 1px solid #e2e8f0;
     font-size: 1.2rem;
+    color: #94a3b8;
 }
 
-.ingredient-selector {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.ingredient-selector select {
-    flex: 1;
-    padding: 0.75rem;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: white;
-}
-
-.add-ingredient-btn {
-    padding: 0.75rem 1.5rem;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 8px;
+/* Название и описание блюда */
+.item-name {
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+
+.item-description {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.add-ingredient-btn:hover {
-    background-color: #218838;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
-}
-
-.ingredients-list {
-    background-color: white;
-    border-radius: 8px;
-    padding: 1rem;
-}
-
-.ingredients-list h5 {
-    margin: 0 0 1rem 0;
-    color: #6c757d;
-    font-size: 0.95rem;
-    font-weight: 600;
-}
-
-.ingredient-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    border-bottom: 1px solid #e9ecef;
-    animation: slideIn 0.2s ease;
-}
-
-.ingredient-item:last-child {
-    border-bottom: none;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.ingredient-name {
-    flex: 2;
-    font-weight: 500;
-    color: #495057;
-}
-
-.ingredient-item input[type="number"] {
-    width: 100px;
-    padding: 0.5rem;
-    border: 2px solid #e9ecef;
-    border-radius: 6px;
-    text-align: center;
-}
-
-.ingredient-item input[type="number"]:focus {
-    border-color: #667eea;
-    outline: none;
-}
-
-.ingredient-unit {
-    width: 50px;
-    color: #6c757d;
-    font-size: 0.9rem;
-}
-
-.remove-ingredient-btn {
-    padding: 0.25rem 0.75rem;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.2s;
-}
-
-.remove-ingredient-btn:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
-}
-
-/* Кнопки в модальном окне */
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 2px solid #e9ecef;
-}
-
-.cancel-button {
-    padding: 0.75rem 1.5rem;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.cancel-button:hover {
-    background-color: #5a6268;
-    transform: translateY(-1px);
-}
-
-.save-button {
-    padding: 0.75rem 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.save-button:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.save-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
 }
 
 /* Категория */
-.category-select-wrapper {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.category-select-wrapper select {
-    flex: 1;
-}
-
-.category-select-wrapper button {
-    padding: 0.75rem 1rem;
-    background-color: #17a2b8;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    background: #eff6ff;
+    color: #1d4ed8;
     white-space: nowrap;
 }
 
-.category-select-wrapper button:hover {
-    background-color: #138496;
+/* Цена */
+.price-cell {
+    font-weight: 600;
+    color: #1e293b;
+    font-variant-numeric: tabular-nums;
 }
 
-.new-category-wrapper {
+/* Менеджер */
+.manager-info {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 6px;
 }
 
-.new-category-wrapper input {
-    flex: 1;
-    padding: 0.75rem;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    font-size: 1rem;
+.manager-name {
+    font-size: 0.9rem;
+    color: #334155;
 }
 
-.new-category-wrapper button {
-    padding: 0.75rem 1rem;
+/* Статус */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.status-badge.active {
+    background: #e6f7e6;
+    color: #0b5e42;
+}
+
+.status-badge.inactive {
+    background: #fee9e7;
+    color: #b91c1c;
+}
+
+/* Кнопки действий */
+.action-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+
+.recipe-btn,
+.edit-btn,
+.toggle-btn,
+.delete-btn {
     border: none;
     border-radius: 8px;
-    font-weight: 600;
+    padding: 7px 10px;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s;
 }
 
-.new-category-wrapper button:first-of-type {
-    background-color: #28a745;
+.recipe-btn {
+    background: #f0f9ff;
+    color: #0369a1;
+}
+
+.recipe-btn:hover {
+    background: #e0f2fe;
+}
+
+.edit-btn {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.edit-btn:hover {
+    background: #dcfce7;
+}
+
+.toggle-btn.deactivate {
+    background: #fff7ed;
+    color: #b45309;
+}
+
+.toggle-btn.deactivate:hover {
+    background: #ffedd5;
+}
+
+.toggle-btn.activate {
+    background: #e6f7e6;
+    color: #0b5e42;
+}
+
+.toggle-btn.activate:hover {
+    background: #dcfce7;
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.delete-btn:hover {
+    background: #fecaca;
+}
+
+/* Пустое состояние */
+.empty-message {
+    text-align: center;
+    padding: 48px 20px;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Загрузка и ошибка */
+.menu-section.loading,
+.menu-section.error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 260px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    color: #b91c1c;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+}
+
+.retry-btn {
+    background: #2563eb;
     color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 24px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.9rem;
 }
 
-.new-category-wrapper button:first-of-type:hover {
-    background-color: #218838;
+.retry-btn:hover {
+    background: #1d4ed8;
 }
 
-.new-category-wrapper button:last-of-type {
-    background-color: #dc3545;
-    color: white;
-}
-
-.new-category-wrapper button:last-of-type:hover {
-    background-color: #c82333;
-}
-
-/* Скроллбар */
-.modal-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-/* Адаптивность */
+/* Адаптация для мобилок */
 @media (max-width: 768px) {
-    .modal-content {
-        width: 95%;
-        max-height: 95vh;
+    .menu-section {
+        padding: 20px 16px;
     }
 
-    .modal-header {
-        padding: 1rem 1.5rem;
-    }
-
-    .modal-header h3 {
-        font-size: 1.2rem;
-    }
-
-    .modal-form {
-        padding: 1.5rem;
-    }
-
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 0;
-    }
-
-    .ingredient-item {
-        flex-wrap: wrap;
-    }
-
-    .ingredient-name {
-        flex: 1 1 100%;
-        margin-bottom: 0.5rem;
-    }
-
-    .ingredient-item input[type="number"] {
-        flex: 1;
-    }
-
-    .modal-footer {
+    .menu-header {
         flex-direction: column;
+        align-items: flex-start;
     }
 
-    .modal-footer button {
+    .menu-header h2 {
+        font-size: 1.4rem;
+    }
+
+    .refresh-btn {
         width: 100%;
+        justify-content: center;
+    }
+
+    .menu-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .add-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filters-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .results-info {
+        margin-left: 0;
+    }
+
+    .menu-table th,
+    .menu-table td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .item-description {
+        max-width: 160px;
     }
 }

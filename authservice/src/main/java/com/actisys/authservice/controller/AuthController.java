@@ -7,6 +7,8 @@ import com.actisys.authservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.UUID;
 
@@ -17,17 +19,23 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request){
-        return ResponseEntity.ok(authService.register(request));
+    public Mono<ResponseEntity<JwtResponse>> register(@RequestBody RegisterRequest request) {
+        return Mono.fromCallable(() -> authService.register(request))
+                .subscribeOn(Schedulers.boundedElastic())
+                .map(ResponseEntity::ok);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request){
-        return ResponseEntity.ok(authService.login(request));
+    public Mono<ResponseEntity<JwtResponse>> login(@RequestBody LoginRequest request) {
+        return Mono.fromCallable(() -> authService.login(request))
+                .subscribeOn(Schedulers.boundedElastic())
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<JwtResponse> refresh(@RequestHeader("X-User-Id") String userId){
-        return ResponseEntity.ok().body(authService.refreshToken(UUID.fromString(userId)));
+    public Mono<ResponseEntity<JwtResponse>> refresh(@RequestHeader("X-User-Id") String userId) {
+        return Mono.fromCallable(() -> authService.refreshToken(UUID.fromString(userId)))
+                .subscribeOn(Schedulers.boundedElastic())
+                .map(ResponseEntity::ok);
     }
 }

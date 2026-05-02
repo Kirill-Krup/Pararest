@@ -14,13 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +58,7 @@ class AuthServiceImplTest {
         when(passwordEncoder.encode("secret")).thenReturn("encoded");
         when(jwtTokenProvider.generate(any(), any())).thenReturn("access-token");
         when(jwtTokenProvider.generateRefreshToken(any(), any())).thenReturn("refresh-token");
-        doThrow(new UserServiceException("userservice down")).when(userServiceClient).createUser(any());
+        when(userServiceClient.createUser(any())).thenReturn(Mono.error(new UserServiceException("userservice down")));
 
         assertThrows(UserServiceException.class, () -> authService.register(request));
 

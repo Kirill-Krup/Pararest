@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,11 @@ public class PaymentController {
     public ResponseEntity<PaymentDTO> newReplenishment(@RequestBody CreateReplenishment createReplenishment,
                                                        @RequestHeader("X-User-Id") String id) {
         return ResponseEntity.ok().body(paymentService.createNewReplenishment(createReplenishment, UUID.fromString(id)));
+    }
+
+    @GetMapping("/totalAmount")
+    public ResponseEntity<BigDecimal> getTotalAmount() {
+        return ResponseEntity.ok().body(paymentService.getTotalAmount());
     }
 
 }

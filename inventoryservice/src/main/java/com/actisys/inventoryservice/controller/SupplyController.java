@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RequestMapping("/api/v1/supplies")
@@ -38,4 +39,8 @@ public class SupplyController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/totalAmount")
+    public ResponseEntity<BigDecimal> getTotalAmount() {
+        return ResponseEntity.ok().body(supplyService.getTotalAmount());
+    }
 }

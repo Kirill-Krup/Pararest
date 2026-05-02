@@ -3,6 +3,18 @@ import { paymentService } from '../../api/paymentservice.ts';
 import type { PaymentDTO } from '../../models/types/payment.types.ts';
 import '../../styles/admin/OperationsTables.css';
 
+const paymentStatusLabels: Record<string, { label: string; className: string }> = {
+    PAID:     { label: 'Оплачен',    className: 'pay-paid' },
+    UNPAID:   { label: 'Не оплачен', className: 'pay-unpaid' },
+    REFUNDED: { label: 'Возврат',    className: 'pay-refunded' },
+};
+
+const paymentTypeLabels: Record<string, string> = {
+    CASH:   'Наличные',
+    CARD:   'Карта',
+    WALLET: 'Кошелёк',
+};
+
 const PaymentsTable: React.FC = () => {
     const [payments, setPayments] = useState<PaymentDTO[]>([]);
     const [loading, setLoading] = useState(true);
@@ -32,20 +44,37 @@ const PaymentsTable: React.FC = () => {
     };
 
     if (loading && payments.length === 0) {
-        return <div className="admin-lite-state">Загрузка платежей...</div>;
+        return (
+            <div className="ops-section ops-section--loading">
+                <div className="ops-spinner" />
+                <p>Загрузка платежей...</p>
+            </div>
+        );
+    }
+
+    if (error && payments.length === 0) {
+        return (
+            <div className="ops-section ops-section--error">
+                <p className="ops-error-msg">{error}</p>
+                <button onClick={fetchPayments} className="ops-retry-btn">Повторить</button>
+            </div>
+        );
     }
 
     return (
-        <div className="operations-section">
-            <div className="operations-header">
-                <h2>Платежи</h2>
-                <button onClick={fetchPayments} className="refresh-btn">Обновить</button>
+        <div className="ops-section">
+            <div className="ops-header">
+                <div className="ops-title-group">
+                    <h2 className="ops-title">💳 Платежи</h2>
+                    <span className="ops-count">{payments.length} записей</span>
+                </div>
+                <button onClick={fetchPayments} className="ops-refresh-btn">🔄 Обновить</button>
             </div>
 
-            {error && <div className="error-message">{error}</div>}
+            {error && <div className="ops-error-inline">{error}</div>}
 
             <div className="table-responsive">
-                <table className="operations-table">
+                <table className="ops-table">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -60,23 +89,39 @@ const PaymentsTable: React.FC = () => {
                     <tbody>
                     {payments.length === 0 ? (
                         <tr>
-                            <td colSpan={7} className="empty-message">Платежи не найдены</td>
+                            <td colSpan={7} className="ops-empty">Платежи не найдены</td>
                         </tr>
                     ) : (
-                        payments.map((payment) => (
-                            <tr key={payment.id}>
-                                <td>{payment.id}</td>
-                                <td>{payment.userId}</td>
-                                <td>{payment.totalAmount.toLocaleString('ru-RU')} ₽</td>
-                                <td>{payment.paymentType}</td>
-                                <td>{payment.paymentStatus}</td>
-                                <td>{payment.orderId ?? '—'}</td>
-                                <td>{formatDate(payment.paymentDate)}</td>
-                            </tr>
-                        ))
+                        payments.map((payment) => {
+                            const status = paymentStatusLabels[payment.paymentStatus] ?? { label: payment.paymentStatus, className: '' };
+                            const typeLabel = paymentTypeLabels[payment.paymentType] ?? payment.paymentType;
+                            return (
+                                <tr key={payment.id}>
+                                    <td className="ops-id">#{payment.id}</td>
+                                    <td className="ops-muted">{payment.userId}</td>
+                                    <td className="ops-price">
+                                        {payment.totalAmount.toLocaleString('ru-RU')} ₽
+                                    </td>
+                                    <td>
+                                        <span className="ops-type-badge">{typeLabel}</span>
+                                    </td>
+                                    <td>
+                                            <span className={`ops-badge ${status.className}`}>
+                                                {status.label}
+                                            </span>
+                                    </td>
+                                    <td className="ops-muted">{payment.orderId ?? '—'}</td>
+                                    <td className="ops-muted">{formatDate(payment.paymentDate)}</td>
+                                </tr>
+                            );
+                        })
                     )}
                     </tbody>
                 </table>
+            </div>
+
+            <div className="ops-footer">
+                Показано: {payments.length} платежей
             </div>
         </div>
     );

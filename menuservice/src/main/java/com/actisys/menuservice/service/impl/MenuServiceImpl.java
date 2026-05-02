@@ -29,6 +29,15 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(readOnly = true)
     public List<MenuItemDTO> getAllMenu() {
         List<MenuItem> allItems = menuRepository.findAll();
+        for(MenuItem item : allItems) {
+            System.out.println(item.getAdderName());
+            System.out.println(item.getActive());
+        }
+        List<MenuItemDTO> items = allItems.stream().map(menuItemMapper::toDto).toList();
+        for(MenuItemDTO item : items) {
+            System.out.println(item.getAdderName());
+            System.out.println(item.getActive());
+        }
         return allItems.stream().map(menuItemMapper::toDto).collect(Collectors.toList());
     }
 
@@ -57,6 +66,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Transactional
     public MenuItemDTO editAvailability(Long id) {
         MenuItem menuItem = menuRepository.findById(id).orElseThrow(()-> new MenuItemNotFoundException(id));
         menuItem.setActive(!menuItem.getActive());

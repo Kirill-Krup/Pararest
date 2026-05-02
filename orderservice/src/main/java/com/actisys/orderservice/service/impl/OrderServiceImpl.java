@@ -179,4 +179,9 @@ public class OrderServiceImpl implements OrderService {
         List<Order> allOrders = orderRepository.findAllByUserIdAndStatusNot(uuid, OrderStatus.IN_CART);
         return allOrders.stream().map(orderMapper::toDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public Long getCount() {
+        return orderRepository.count();
+    }
 }

@@ -6,6 +6,7 @@ import com.actisys.orderservice.dto.OrderDTO;
 import com.actisys.orderservice.model.OrderStatus;
 import com.actisys.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,5 +81,10 @@ public class OrderController {
     public ResponseEntity<Void> clearCart(@RequestHeader("X-User-Id") String userId){
         orderService.clearCart(UUID.fromString(userId));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/totalCount")
+    public ResponseEntity<Long> getTotalCount(){
+        return ResponseEntity.ok().body(orderService.getCount());
     }
 }

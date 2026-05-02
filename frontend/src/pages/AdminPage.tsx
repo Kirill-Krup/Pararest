@@ -9,13 +9,14 @@ import IngredientsTable from "../components/admin/IngredientTable.tsx";
 import SuppliesTable from "../components/admin/SupplierTable.tsx";
 import OrdersTable from "../components/admin/OrdersTable.tsx";
 import PaymentsTable from "../components/admin/PaymentsTable.tsx";
+import AnalyticsSection from "../components/admin/AnalyticsSection.tsx";
 
 const AdminPage: React.FC = () => {
-    const [activeSection, setActiveSection] = useState('users');
+    const [activeSection, setActiveSection] = useState('analytics');
 
     useEffect(() => {
         const handleScroll = () => {
-            const sections = ['users', 'menu', 'ingredients', 'supplies', 'orders', 'transactions'];
+            const sections = ['analytics', 'users', 'menu', 'ingredients', 'supplies', 'orders', 'transactions'];
 
             for (const sectionId of sections) {
                 const element = document.getElementById(sectionId);
@@ -50,6 +51,10 @@ const AdminPage: React.FC = () => {
             <div className="admin-main">
                 <AdminHeader />
                 <main className="admin-content">
+\                    <section id="analytics" className="admin-section">
+                        <AnalyticsSection />
+                    </section>
+
                     <section id="users" className="admin-section">
                         <UsersTable />
                     </section>

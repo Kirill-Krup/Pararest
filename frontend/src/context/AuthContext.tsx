@@ -77,9 +77,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             await authService.login(data);
             const userData = await loadUser();
+            if(userData?.blocked){
+                authService.removeTokens();
+                setUser(null);
+                window.location.href = "/blocked";
+                return ;
+            }
             if (userData) {
                 redirectByRole(userData.role);
             }
+
         } catch (error) {
             throw error;
         } finally {

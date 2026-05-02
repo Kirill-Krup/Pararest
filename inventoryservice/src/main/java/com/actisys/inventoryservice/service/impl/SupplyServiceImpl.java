@@ -98,4 +98,10 @@ public class SupplyServiceImpl implements SupplyService {
         }
         supplyRepository.delete(supply);
     }
+
+    @Override
+    public BigDecimal getTotalAmount() {
+        List<Supply> supplyList = supplyRepository.findAll();
+        return supplyList.stream().map(Supply::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
