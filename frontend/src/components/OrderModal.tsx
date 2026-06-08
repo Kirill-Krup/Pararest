@@ -94,7 +94,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, totalPrice, on
 
                 <div className="modal-price-summary">
                     <span>Сумма заказа</span>
-                    <span className="modal-total-price">{totalPrice.toFixed(2)} ₽</span>
+                    <span className="modal-total-price">{totalPrice.toFixed(2)} BYN</span>
                 </div>
 
                 <form className="modal-form" onSubmit={handleSubmit}>
@@ -197,7 +197,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, totalPrice, on
                                     Оформляем...
                                 </>
                             ) : (
-                                `Подтвердить — ${totalPrice.toFixed(2)} ₽`
+                                `Подтвердить — ${totalPrice.toFixed(2)} BYN`
                             )}
                         </button>
                     </div>

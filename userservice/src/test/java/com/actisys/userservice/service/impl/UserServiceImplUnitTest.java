@@ -105,7 +105,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-1: Регистрация пользователя")
+    @DisplayName("Регистрация пользователя")
     class RegisterTests {
 
         @Test
@@ -131,7 +131,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-2: Получение информации о пользователе")
+    @DisplayName("Получение информации о пользователе")
     class GetInfoTests {
 
         @Test
@@ -161,7 +161,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-3: Получение всех пользователей")
+    @DisplayName("Получение всех пользователей")
     class GetAllTests {
 
         @Test
@@ -198,7 +198,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-4: Изменение роли пользователя")
+    @DisplayName("Изменение роли пользователя")
     class ChangeRoleTests {
 
         @Test
@@ -216,7 +216,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-5: Блокировка/разблокировка пользователя")
+    @DisplayName("Блокировка/разблокировка пользователя")
     class AccessTests {
 
         @Test
@@ -246,7 +246,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-6: Удаление пользователя")
+    @DisplayName("Удаление пользователя")
     class DeleteUserTests {
 
         @Test
@@ -272,7 +272,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-7: Обновление профиля")
+    @DisplayName("Обновление профиля")
     class UpdateProfileTests {
 
         @Test
@@ -299,7 +299,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-8: Номер комнаты")
+    @DisplayName("Номер комнаты")
     class RoomNumberTests {
 
         @Test
@@ -337,7 +337,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-9: Пополнение кошелька")
+    @DisplayName("Пополнение кошелька")
     class TopUpTests {
 
         @Test
@@ -370,7 +370,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-10: Списание денег")
+    @DisplayName("Списание денег")
     class WithdrawTests {
 
         @Test
@@ -427,7 +427,7 @@ class UserServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-11: Возврат средств")
+    @DisplayName("Возврат средств")
     class RefundTests {
 
         @Test

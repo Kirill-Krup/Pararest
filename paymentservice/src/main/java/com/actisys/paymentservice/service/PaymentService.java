@@ -26,4 +26,8 @@ public interface PaymentService {
     void refundMoney(RefundEvent event);
 
     BigDecimal getTotalAmount();
+
+    BigDecimal getRevenueAmount();
+
+    Long getRevenueOperationsCount();
 }

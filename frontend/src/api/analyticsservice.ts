@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8088/api/v1';
+const API_BASE = 'http://localhost:8080/api/v1';
 
 const api = axios.create({
     baseURL: API_BASE,
@@ -16,6 +16,8 @@ export interface AnalyticsDTO {
     netProfit: number;
     totalOrders: number;
     averageCheck: number;
+    topDishName: string;
+    topDishCount: number;
 }
 
 export const analyticsService = {

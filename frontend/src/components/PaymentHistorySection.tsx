@@ -144,9 +144,9 @@ const PaymentHistorySection: React.FC<Props> = ({ refreshTrigger }) => {
                                             <span className={
                                                 p.paymentStatus === "FAILED" || p.paymentStatus === "CANCELLED"
                                                     ? "amount-neutral"
-                                                    : "amount-positive"
+                                                    : p.orderId && p.orderId !== 0 ? "amount-negative" : "amount-positive"
                                             }>
-                                                +{Number(p.totalAmount).toLocaleString("ru-RU")} ₽
+                                                {p.orderId && p.orderId !== 0 ? '-' : '+'}{Number(p.totalAmount).toLocaleString("ru-RU")} BYN
                                             </span>
                                     </td>
                                     <td className="cell-status">

@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    color: #0f172a;
 }
 
 /* Header */
@@ -12,7 +13,7 @@
     display: flex;
     align-items: baseline;
     gap: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid #e2e8f0;
     padding-bottom: 12px;
 }
 
@@ -21,13 +22,13 @@
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.18em;
-    color: #e8c468;
+    color: #2563eb;
 }
 
 .analytics-period {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.3);
+    color: #64748b;
     letter-spacing: 0.05em;
 }
 
@@ -44,15 +45,17 @@
     align-items: center;
     gap: 14px;
     padding: 16px 18px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 6px;
-    transition: background 0.2s, border-color 0.2s;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
 .metric-card:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.14);
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
 }
 
 .metric-icon {
@@ -68,6 +71,7 @@
 .metric-expenses .metric-icon { color: #f87171; }
 .metric-orders .metric-icon { color: #60a5fa; }
 .metric-avg .metric-icon { color: #c084fc; }
+.metric-top-dish .metric-icon { color: #f59e0b; }
 
 .profit-pos .metric-icon { color: #4ade80; }
 .profit-neg .metric-icon { color: #f87171; }
@@ -83,7 +87,7 @@
     font-size: 10px;
     font-family: 'JetBrains Mono', monospace;
     letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.4);
+    color: #64748b;
     text-transform: uppercase;
     white-space: nowrap;
 }
@@ -91,11 +95,16 @@
 .metric-value {
     font-size: 18px;
     font-weight: 600;
-    color: #f0ede8;
+    color: #0f172a;
     letter-spacing: -0.02em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.metric-subvalue {
+    font-size: 12px;
+    color: #64748b;
 }
 
 .profit-pos .metric-value { color: #4ade80; }
@@ -215,7 +224,7 @@
     align-items: center;
     gap: 6px;
     padding: 32px;
-    color: rgba(255, 255, 255, 0.35);
+    color: #475569;
 }
 
 .error-icon {
@@ -231,5 +240,5 @@
 .error-detail {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.2);
+    color: #64748b;
 }

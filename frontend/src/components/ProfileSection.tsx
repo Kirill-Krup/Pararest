@@ -76,7 +76,7 @@ const ProfileSection: React.FC = () => {
     };
 
     const formatWallet = (amount: number) => {
-        return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount);
+        return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'BYN', maximumFractionDigits: 0 }).format(amount);
     };
 
     const roleLabels: Record<string, string> = {

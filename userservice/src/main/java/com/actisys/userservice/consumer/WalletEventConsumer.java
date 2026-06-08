@@ -22,10 +22,10 @@ public class WalletEventConsumer {
         userService.topUp(event);
     }
 
-    @KafkaListener(topics = "PAYMENT_EVENT", groupId = "user-service-group",
+    @KafkaListener(topics = {"PAYMENT_EVENT", "WITHDRAW_MONEY"}, groupId = "user-service-group",
             containerFactory = "createWalletListenerFactory")
     public void handlePaymentEvent(CreateWalletEvent event) {
-        log.info("handlePaymentEvent");
+        log.info("handlePaymentEvent/WITHDRAW_MONEY");
         userService.withdrawMoney(event);
     }
 

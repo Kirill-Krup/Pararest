@@ -305,3 +305,7 @@
         display: none;
     }
 }
+
+.amount-negative {
+    color: #c0392b;
+}

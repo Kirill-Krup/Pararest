@@ -9,6 +9,7 @@ interface AdminNavbarProps {
 
 const AdminNavbar: React.FC<AdminNavbarProps> = ({ activeSection, onSectionChange }) => {
     const sections = [
+        { id: 'analytics',    label: 'Аналитика',     icon: <BarChart3 size={20} /> },
         { id: 'users',        label: 'Пользователи', icon: <Users size={20} /> },
         { id: 'menu',         label: 'Меню',          icon: <Menu size={20} /> },
         { id: 'ingredients',  label: 'Ингредиенты',   icon: <Package size={20} /> },

@@ -7,15 +7,13 @@ const AboutSection: React.FC = () => {
             <div className="container">
                 <div className="about-grid">
 
-                    {/* Левая часть - изображение */}
                     <div className="about-image">
-                        <div className="image-placeholder">
-                            {/* Здесь будет реальное изображение */}
-                            <div className="placeholder-content">
-                                <span>🍽️</span>
-                                <p>Атмосфера ресторана</p>
-                            </div>
-                        </div>
+                        <img
+                            className="about-image-photo"
+                            loading="lazy"
+                            src="https://img.freepik.com/premium-photo/ultimate-fine-dining-experience-large-luxury-restaurant-generative-ai_634358-1407.jpg?semt=ais_hybrid"
+                            alt="Интерьер ресторана с элегантной атмосферой"
+                        />
                         <div className="image-badge">
                             <span className="badge-icon">🏆</span>
                             <span className="badge-text">Лучший ресторан 2025</span>

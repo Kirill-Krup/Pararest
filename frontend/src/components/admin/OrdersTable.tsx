@@ -41,7 +41,20 @@ const OrdersTable: React.FC = () => {
 
     const formatDate = (dateStr?: string) => {
         if (!dateStr) return '—';
-        return new Date(dateStr).toLocaleString('ru-RU');
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) {
+                return '—';
+            }
+            // Отображаем только дату (без времени)
+            return date.toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        } catch {
+            return '—';
+        }
     };
 
     if (loading && orders.length === 0) {

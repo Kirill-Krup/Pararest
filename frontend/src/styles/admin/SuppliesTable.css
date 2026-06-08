@@ -89,3 +89,61 @@
 .supplies-table td {
     vertical-align: middle;
 }
+
+.supplies-section,
+.supplies-section * {
+    color: #1e293b;
+}
+
+.supplies-section label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #334155;
+}
+
+.supplies-section input,
+.supplies-section select {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #fff;
+    color: #0f172a;
+}
+
+.supplies-section input::placeholder {
+    color: #94a3b8;
+}
+
+.supplies-section .table-responsive {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow-x: auto;
+}
+
+.supplies-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.supplies-table th {
+    background: #f8fafc;
+    color: #1e293b;
+    text-align: left;
+    font-weight: 600;
+    padding: 12px 14px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.supplies-table td {
+    color: #334155;
+    padding: 12px 14px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.supplies-table tr:last-child td {
+    border-bottom: none;
+}

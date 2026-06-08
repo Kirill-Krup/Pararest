@@ -39,14 +39,22 @@ const PAYMENT_TYPE_LABEL: Record<PaymentType, string> = {
 
 const formatDateTime = (str?: string) => {
     if (!str) return '—';
-    return new Date(str).toLocaleString('ru-RU', {
-        day: '2-digit', month: 'long', year: 'numeric',
-        hour: '2-digit', minute: '2-digit',
-    });
+    try {
+        const date = new Date(str);
+        if (isNaN(date.getTime())) {
+            return '—';
+        }
+        // Отображаем только дату (без времени)
+        return date.toLocaleDateString('ru-RU', {
+            day: '2-digit', month: 'long', year: 'numeric'
+        });
+    } catch {
+        return '—';
+    }
 };
 
 const formatPrice = (n: number) =>
-    new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(n);
+    new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'BYN', maximumFractionDigits: 0 }).format(n);
 
 interface DetailModalProps {
     order: OrderDTO;

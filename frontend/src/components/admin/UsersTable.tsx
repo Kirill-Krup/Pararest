@@ -162,7 +162,7 @@ const UsersTable: React.FC = () => {
                                 <td>{user.phone}</td>
                                 <td>{formatDate(user.birthday)}</td>
                                 <td className={user.wallet === 0 ? 'zero-wallet' : ''}>
-                                    {user.wallet} ₽
+                                    {user.wallet} BYN
                                 </td>
                                 <td>
                                     <select

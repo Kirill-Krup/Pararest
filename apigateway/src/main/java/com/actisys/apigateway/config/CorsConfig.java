@@ -15,11 +15,9 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
-        corsConfig.setAllowedOrigins(Arrays.asList(
-                "http://localhost:8080",
-                "http://127.0.0.1:8080",
-                "http://localhost:5173",
-                "http://localhost:5174"
+        corsConfig.setAllowedOriginPatterns(Arrays.asList(
+                "http://localhost:*",
+                "http://127.0.0.1:*"
         ));
 
         corsConfig.setAllowedMethods(Arrays.asList(

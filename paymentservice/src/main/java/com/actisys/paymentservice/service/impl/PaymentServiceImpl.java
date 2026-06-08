@@ -20,7 +20,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,7 +48,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentDTO createNewReplenishment(CreateReplenishment createReplenishment, UUID uuid) {
         Payment payment = Payment.builder()
-                .paymentDate(LocalDate.now())
+                .paymentDate(LocalDateTime.now())
                 .paymentStatus(PaymentStatus.IN_WAIT)
                 .paymentType(PaymentType.REPLENISHMENT)
                 .orderId(0L)
@@ -92,7 +92,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void createNewPayment(CreatePaymentEvent event) {
         Payment payment = Payment.builder()
-                .paymentDate(LocalDate.now())
+                .paymentDate(LocalDateTime.now())
                 .paymentStatus(PaymentStatus.IN_WAIT)
                 .paymentType(PaymentType.CARD)
                 .orderId(event.getOrderId())
@@ -100,6 +100,14 @@ public class PaymentServiceImpl implements PaymentService {
                 .userId(event.getUserId())
                 .build();
         Payment savedPayment = paymentRepository.save(payment);
+        
+        CreateWalletEvent walletEvent = CreateWalletEvent.builder()
+                .userId(savedPayment.getUserId())
+                .paymentId(savedPayment.getId())
+                .totalAmount(savedPayment.getTotalAmount())
+                .build();
+        kafkaTemplate.send("WITHDRAW_MONEY", walletEvent);
+        
         CreatePaymentEvent paymentEvent = CreatePaymentEvent.builder()
                 .userId(savedPayment.getUserId())
                 .totalAmount(savedPayment.getTotalAmount())
@@ -136,5 +144,26 @@ public class PaymentServiceImpl implements PaymentService {
     public BigDecimal getTotalAmount() {
         List<Payment> allPayments = paymentRepository.findAll();
         return allPayments.stream().map(Payment::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public BigDecimal getRevenueAmount() {
+        List<Payment> allPayments = paymentRepository.findAll();
+        return allPayments.stream()
+                .filter(payment -> payment.getPaymentStatus() == PaymentStatus.SUCCESS)
+                .filter(payment -> payment.getPaymentType() == PaymentType.REPLENISHMENT
+                        || payment.getPaymentType() == PaymentType.CASH)
+                .map(Payment::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public Long getRevenueOperationsCount() {
+        List<Payment> allPayments = paymentRepository.findAll();
+        return allPayments.stream()
+                .filter(payment -> payment.getPaymentStatus() == PaymentStatus.SUCCESS)
+                .filter(payment -> payment.getPaymentType() == PaymentType.REPLENISHMENT
+                        || payment.getPaymentType() == PaymentType.CASH)
+                .count();
     }
 }

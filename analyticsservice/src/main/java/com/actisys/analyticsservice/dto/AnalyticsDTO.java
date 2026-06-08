@@ -17,4 +17,6 @@ public class AnalyticsDTO {
     private BigDecimal netProfit;
     private Long totalOrders;
     private BigDecimal averageCheck;
+    private String topDishName;
+    private Long topDishCount;
 }

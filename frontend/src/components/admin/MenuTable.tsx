@@ -187,7 +187,7 @@ const MenuTable: React.FC = () => {
     };
 
     const formatPrice = (price: number) => {
-        return `${price.toLocaleString('ru-RU')} ₽`;
+        return `${price.toLocaleString('ru-RU')} BYN`;
     };
 
     const formatDate = (dateStr: string) => {

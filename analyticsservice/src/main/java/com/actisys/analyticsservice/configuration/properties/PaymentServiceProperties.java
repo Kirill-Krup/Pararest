@@ -17,5 +17,7 @@ public class PaymentServiceProperties {
     @Setter
     public static class Endpoints {
         private String totalAmount;
+        private String revenueAmount;
+        private String revenueOperationsCount;
     }
 }

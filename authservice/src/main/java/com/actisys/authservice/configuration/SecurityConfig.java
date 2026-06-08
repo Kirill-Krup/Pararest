@@ -1,6 +1,7 @@
 package com.actisys.authservice.configuration;
 
 import com.actisys.authservice.oauth2.OAuth2ReactiveAuthenticationSuccessHandler;
+import com.actisys.authservice.oauth2.CustomReactiveOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 public class SecurityConfig {
 
     private final OAuth2ReactiveAuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
+    private final CustomReactiveOAuth2UserService customReactiveOAuth2UserService;
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
@@ -29,7 +31,7 @@ public class SecurityConfig {
                         .pathMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/swagger-ui/**").permitAll()
                         .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/error").permitAll()
-                        .anyExchange().authenticated()
+                        .anyExchange().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .authenticationSuccessHandler(oauth2AuthenticationSuccessHandler)

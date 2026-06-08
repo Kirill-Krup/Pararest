@@ -17,5 +17,6 @@ public class OrderServiceProperties {
     @Setter
     public static class Endpoints {
         private String totalCount;
+        private String allOrders;
     }
 }

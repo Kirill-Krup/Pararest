@@ -210,7 +210,7 @@ const CartSection: React.FC<CartSectionProps> = ({ onOrderCreated }) => {
                                             >
                                                 🗑
                                             </button>
-                                            <span className="item-total">{itemTotal} ₽</span>
+                                            <span className="item-total">{itemTotal} BYN</span>
                                         </div>
                                     </div>
                                 );
@@ -303,7 +303,7 @@ const CartSection: React.FC<CartSectionProps> = ({ onOrderCreated }) => {
                                 </div>
                                 <div className="summary-row total-row">
                                     <span>Итого:</span>
-                                    <span>{totalPrice} ₽</span>
+                                    <span>{totalPrice} BYN</span>
                                 </div>
                             </div>
 

@@ -39,4 +39,14 @@ public class PaymentController {
         return ResponseEntity.ok().body(paymentService.getTotalAmount());
     }
 
+    @GetMapping("/revenueAmount")
+    public ResponseEntity<BigDecimal> getRevenueAmount() {
+        return ResponseEntity.ok().body(paymentService.getRevenueAmount());
+    }
+
+    @GetMapping("/revenueOperationsCount")
+    public ResponseEntity<Long> getRevenueOperationsCount() {
+        return ResponseEntity.ok().body(paymentService.getRevenueOperationsCount());
+    }
+
 }

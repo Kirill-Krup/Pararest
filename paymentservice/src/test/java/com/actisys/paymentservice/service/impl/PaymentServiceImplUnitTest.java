@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,7 +38,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Модульное тестирование PaymentService")
+@DisplayName("Интеграционное тестирование PaymentService")
 class PaymentServiceImplUnitTest {
 
     @Mock
@@ -71,7 +71,7 @@ class PaymentServiceImplUnitTest {
                 .userId(testUserId)
                 .orderId(testOrderId)
                 .totalAmount(new BigDecimal("150.00"))
-                .paymentDate(LocalDate.now())
+                .paymentDate(LocalDateTime.now())
                 .paymentStatus(PaymentStatus.IN_WAIT)
                 .paymentType(PaymentType.REPLENISHMENT)
                 .build();
@@ -81,7 +81,7 @@ class PaymentServiceImplUnitTest {
                 .userId(testUserId)
                 .orderId(testOrderId)
                 .totalAmount(new BigDecimal("150.00"))
-                .paymentDate(LocalDate.now())
+                .paymentDate(LocalDateTime.now())
                 .paymentStatus(PaymentStatus.IN_WAIT)
                 .paymentType(PaymentType.REPLENISHMENT)
                 .build();
@@ -91,7 +91,7 @@ class PaymentServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-1: Получение всех платежей")
+    @DisplayName("Получение всех платежей")
     class GetAllPaymentsTests {
 
         @Test
@@ -121,7 +121,7 @@ class PaymentServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-2: Получение платежей пользователя")
+    @DisplayName("Получение платежей пользователя")
     class GetUserPaymentsTests {
 
         @Test
@@ -130,12 +130,12 @@ class PaymentServiceImplUnitTest {
             Payment payment1 = Payment.builder()
                     .id(1L)
                     .userId(testUserId)
-                    .paymentDate(LocalDate.of(2024, 1, 15))
+                    .paymentDate(LocalDateTime.of(2024, 1, 15, 12, 0))
                     .build();
             Payment payment2 = Payment.builder()
                     .id(2L)
                     .userId(testUserId)
-                    .paymentDate(LocalDate.of(2024, 1, 10))
+                    .paymentDate(LocalDateTime.of(2024, 1, 10, 12, 0))
                     .build();
 
             PaymentDTO dto1 = PaymentDTO.builder().id(1L).build();
@@ -154,7 +154,7 @@ class PaymentServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-3: Создание пополнения счета")
+    @DisplayName("Создание пополнения счета")
     class CreateReplenishmentTests {
 
         @Test
@@ -203,7 +203,7 @@ class PaymentServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-4: Изменение статуса платежа")
+    @DisplayName("Изменение статуса платежа")
     class ChangePaymentStatusTests {
 
         @Test
@@ -289,7 +289,7 @@ class PaymentServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-5: Создание нового платежа по заказу")
+    @DisplayName("Создание нового платежа по заказу")
     class CreateNewPaymentTests {
 
         @Test
@@ -321,7 +321,7 @@ class PaymentServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-6: Отмена заказа и возврат средств")
+    @DisplayName("Отмена заказа и возврат средств")
     class CancelOrderTests {
 
         @Test
@@ -362,7 +362,7 @@ class PaymentServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-7: Возврат денег по статусу")
+    @DisplayName("Возврат денег по статусу")
     class RefundMoneyTests {
 
         @Test
@@ -407,7 +407,7 @@ class PaymentServiceImplUnitTest {
     }
 
     @Nested
-    @DisplayName("МТ-8: Получение общей суммы всех платежей")
+    @DisplayName("Получение общей суммы всех платежей")
     class GetTotalAmountTests {
 
         @Test

@@ -15,7 +15,7 @@ const AnalyticsSection: React.FC = () => {
     }, []);
 
     const fmt = (n: number) =>
-        new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(n);
+        new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'BYN', maximumFractionDigits: 0 }).format(n);
 
     if (loading) {
         return (
@@ -86,6 +86,15 @@ const AnalyticsSection: React.FC = () => {
                     <div className="metric-body">
                         <span className="metric-title">Средний чек</span>
                         <span className="metric-value">{fmt(data.averageCheck)}</span>
+                    </div>
+                </div>
+
+                <div className="metric-card metric-top-dish">
+                    <div className="metric-icon">★</div>
+                    <div className="metric-body">
+                        <span className="metric-title">Популярное блюдо</span>
+                        <span className="metric-value">{data.topDishName || '—'}</span>
+                        <span className="metric-subvalue">{(data.topDishCount ?? 0).toLocaleString('ru-RU')} порц.</span>
                     </div>
                 </div>
             </div>

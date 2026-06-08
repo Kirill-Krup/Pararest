@@ -224,7 +224,7 @@ const MenuSection: React.FC = () => {
                             <div className="card-content">
                                 <div className="card-header">
                                     <h3 className="card-title">{item.name}</h3>
-                                    <span className="card-price">{item.price} ₽</span>
+                                    <span className="card-price">{item.price} BYN</span>
                                 </div>
                                 <p className="card-description">{item.description}</p>
                                 <div className="card-footer">

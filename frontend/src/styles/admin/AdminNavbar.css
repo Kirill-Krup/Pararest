@@ -1,5 +1,5 @@
 .admin-navbar {
-    width: 250px;
+    width: 220px;
     height: 100vh;
     background: linear-gradient(180deg, #2c3e50 0%, #1a2632 100%);
     color: white;
@@ -12,14 +12,14 @@
 }
 
 .admin-navbar-header {
-    padding: 20px;
+    padding: 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 20px;
 }
 
 .admin-navbar-header h3 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 500;
     color: #ecf0f1;
 }
@@ -33,7 +33,7 @@
 .admin-navbar-item {
     display: flex;
     align-items: center;
-    padding: 12px 20px;
+    padding: 11px 14px;
     cursor: pointer;
     transition: all 0.3s ease;
     border-left: 4px solid transparent;
@@ -57,11 +57,20 @@
 }
 
 .admin-navbar-label {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1366px) {
+    .admin-navbar {
+        width: 200px;
+    }
+}
+
+@media (max-width: 1024px) {
     .admin-navbar {
         width: 70px;
     }
@@ -79,5 +88,17 @@
     .admin-navbar-item {
         justify-content: center;
         padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-navbar {
+        width: 0;
+        transform: translateX(-100%);
+        pointer-events: none;
+    }
+
+    .admin-navbar * {
+        display: none;
     }
 }

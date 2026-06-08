@@ -11,8 +11,9 @@ const paymentStatusLabels: Record<string, { label: string; className: string }> 
 
 const paymentTypeLabels: Record<string, string> = {
     CASH:   'Наличные',
-    CARD:   'Карта',
+    CARD:   'Заказ',
     WALLET: 'Кошелёк',
+    REPLENISHMENT: 'Пополнение',
 };
 
 const PaymentsTable: React.FC = () => {
@@ -40,7 +41,21 @@ const PaymentsTable: React.FC = () => {
 
     const formatDate = (dateStr: string) => {
         if (!dateStr) return '—';
-        return new Date(dateStr).toLocaleString('ru-RU');
+        try {
+            const date = new Date(dateStr);
+            // Проверяем, валидна ли дата
+            if (isNaN(date.getTime())) {
+                return '—';
+            }
+            // Отображаем только дату (без времени)
+            return date.toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        } catch {
+            return '—';
+        }
     };
 
     if (loading && payments.length === 0) {
@@ -100,7 +115,7 @@ const PaymentsTable: React.FC = () => {
                                     <td className="ops-id">#{payment.id}</td>
                                     <td className="ops-muted">{payment.userId}</td>
                                     <td className="ops-price">
-                                        {payment.totalAmount.toLocaleString('ru-RU')} ₽
+                                        {payment.totalAmount.toLocaleString('ru-RU')} BYN
                                     </td>
                                     <td>
                                         <span className="ops-type-badge">{typeLabel}</span>

@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -38,5 +38,5 @@ public class Payment {
     private PaymentStatus paymentStatus;
 
     @Column(name = "payment_date")
-    private LocalDate paymentDate;
+    private LocalDateTime paymentDate;
 }

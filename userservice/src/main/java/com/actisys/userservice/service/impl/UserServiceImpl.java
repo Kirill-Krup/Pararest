@@ -116,17 +116,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void withdrawMoney(CreateWalletEvent event) {
+        log.info("Processing withdrawMoney event: userId={}, paymentId={}, amount={}", 
+                event.getUserId(), event.getPaymentId(), event.getTotalAmount());
+        
         User user = userRepository.findById(event.getUserId()).orElseThrow(
                 ()->new UserNotFoundException(event.getUserId()));
+        
+        log.info("User current wallet balance: {}", user.getWallet());
+        
         WithdrawEvent withdrawEvent = new WithdrawEvent();
         withdrawEvent.setPaymentId(event.getPaymentId());
+        
         if(user.getWallet().compareTo(event.getTotalAmount()) < 0){
+            log.warn("Not enough money: user balance={}, required amount={}", 
+                    user.getWallet(), event.getTotalAmount());
             withdrawEvent.setPaymentStatus(PaymentStatus.NOT_ENOUGH_MONEY);
             kafkaTemplate.send("WITHDRAW_MONEY", withdrawEvent);
             throw new NotEnoughMoneyException();
         }
-        user.setWallet(user.getWallet().subtract(event.getTotalAmount()));
+        
+        BigDecimal newBalance = user.getWallet().subtract(event.getTotalAmount());
+        user.setWallet(newBalance);
         userRepository.save(user);
+        
+        log.info("Money withdrawn successfully. New balance: {}", newBalance);
+        
         withdrawEvent.setPaymentStatus(PaymentStatus.PAID);
         kafkaTemplate.send("WITHDRAW_MONEY", withdrawEvent);
     }
@@ -142,7 +156,7 @@ public class UserServiceImpl implements UserService {
                     kafkaTemplate.send("REFUND_STATUS_EVENT", statEvent);
                     return new UserNotFoundException(event.getUserId());
                 });
-        user.setWallet(user.getWallet().subtract(event.getAmount()));
+        user.setWallet(user.getWallet().add(event.getAmount()));
         userRepository.save(user);
         RefundEvent statEvent = RefundEvent.builder()
                 .paymentId(event.getPaymentId())

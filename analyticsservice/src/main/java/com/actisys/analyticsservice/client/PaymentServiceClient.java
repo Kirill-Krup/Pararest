@@ -6,4 +6,8 @@ import java.math.BigDecimal;
 
 public interface PaymentServiceClient {
     Mono<BigDecimal> getTotalAmount();
+
+    Mono<BigDecimal> getRevenueAmount();
+
+    Mono<Long> getRevenueOperationsCount();
 }

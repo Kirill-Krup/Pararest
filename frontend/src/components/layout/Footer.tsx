@@ -64,6 +64,20 @@ const Footer: React.FC = () => {
                             </li>
                         </ul>
                     </div>
+
+                    <div className="footer-column footer-column-map">
+                        <h4 className="footer-heading">Мы на карте</h4>
+                        <div className="footer-map">
+                            <iframe
+                                src="https://yandex.ru/map-widget/v1/?um=constructor%3Ab9b4c967e38a083349afd9b5c89eb606961c908edc9aebac3b3f811dc849a39f&amp;source=constructor"
+                                width="100%"
+                                height="300"
+                                frameBorder="0"
+                                title="Карта Actisys Restaurant"
+                                loading="lazy"
+                            ></iframe>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="footer-bottom">
