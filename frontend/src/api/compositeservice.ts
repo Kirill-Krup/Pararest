@@ -1,6 +1,7 @@
-import type {AddMenuItemDTO, AddMenuItemRequest} from "../models/MenuItemDTO.ts";
 import axios from "axios";
 import type {FullOrderDTO} from "../models/types/order.types.ts";
+import type {MenuItemFormData} from "./menuservice.ts";
+
 const API_BASE = 'http://localhost:8080/api/v1/composite';
 
 const api = axios.create({
@@ -10,20 +11,19 @@ const api = axios.create({
         'Content-Type': 'application/json',
     },
 });
-export const compositeservice = {
-    async createMenuItemWithRecipe(formData: AddMenuItemDTO, ingredientsMap: Record<number, number>): Promise<boolean> {
-        try {
-            const itemDTO: AddMenuItemDTO = {
-                name: formData.name,
-                description: formData.description,
-                price: formData.price,
-                category: formData.category,
-                imageUrl: formData.imageUrl || null,
-                isActive: formData.isActive
-            };
 
-            const request: AddMenuItemRequest = {
-                item: itemDTO,
+export const compositeservice = {
+    async createMenuItemWithRecipe(formData: MenuItemFormData, ingredientsMap: Record<number, number>): Promise<boolean> {
+        try {
+            const request = {
+                item: {
+                    name: formData.name,
+                    description: formData.description,
+                    price: formData.price,
+                    category: { id: 0, name: formData.category },
+                    imageUrl: formData.imageUrl || null,
+                    preparationTime: null
+                },
                 ingredientsMap: ingredientsMap
             };
 
@@ -44,4 +44,4 @@ export const compositeservice = {
             throw error;
         }
     }
-}
+};

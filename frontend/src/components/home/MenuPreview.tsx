@@ -56,7 +56,7 @@ const MenuPreview: React.FC = () => {
                         <div key={item.id} className="menu-card">
                             <div className="menu-card-image">
                                 <div className="image-placeholder">
-                                    <img alt={"Dish photo"} src={item.imageUrl}/>
+                                    <img alt={"Dish photo"} src={item.imageUrl ?? undefined}/>
                                 </div>
                             </div>
 

@@ -13,4 +13,7 @@ export interface MenuItemDTO{
     adderName: string;
     createdAt: string;
     updatedAt?: string;
+    preparationTime?: number;
+    recipe?: string | null;
+    addedByManagerName?: string;
 }

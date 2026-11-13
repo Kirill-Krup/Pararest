@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { type MenuItemFormData } from '../../api/menuservice';
 import { ingredientService } from '../../api/ingredientService';
 import '../../styles/admin/MenuTableCss.css';
-import type { MenuItemDTO } from "../../models/MenuItemDTO";
+import type { MenuItemDTO } from "../../models/types/menu.types";
 import {compositeservice} from "../../api/compositeservice.ts";
 
 interface IngredientSelection {
@@ -34,7 +34,7 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({
         category: '',
         recipe: '',
         imageUrl: '',
-        isActive: true
+        active: true
     });
 
     const [ingredients, setIngredients] = useState<IngredientSelection[]>([]);
@@ -77,10 +77,10 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({
                 name: item.name,
                 description: item.description,
                 price: item.price,
-                category: item.category,
+                category: typeof item.category === 'string' ? item.category : item.category?.name || '',
                 recipe: item.recipe || '',
                 imageUrl: item.imageUrl || '',
-                isActive: item.isActive
+                active: item.active
             });
         } else {
             setFormData({
@@ -90,7 +90,7 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({
                 category: categories[0] || '',
                 recipe: '',
                 imageUrl: '',
-                isActive: true
+                active: true
             });
             setIngredients([]);
         }
@@ -361,8 +361,8 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({
                         <label>
                             <input
                                 type="checkbox"
-                                checked={formData.isActive}
-                                onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                                checked={formData.active}
+                                onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
                             />
                             Активно (доступно для заказа)
                         </label>

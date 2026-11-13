@@ -1,5 +1,5 @@
 import React from 'react';
-import { type MenuItemDTO } from '../../models/MenuItemDTO';
+import { type MenuItemDTO } from '../../models/types/menu.types';
 import '../../styles/admin/RecipeModal.css';
 
 interface RecipeModalProps {

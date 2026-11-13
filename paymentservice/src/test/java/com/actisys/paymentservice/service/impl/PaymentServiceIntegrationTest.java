@@ -29,13 +29,14 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("Интеграционное функциональное тестирование Payment Service")
 class PaymentServiceIntegrationTest {
@@ -120,10 +121,10 @@ class PaymentServiceIntegrationTest {
     @DisplayName("ФТ-3: GET /payments/user/{userId} - платежи пользователя")
     void ft3_getUserPayments_ShouldReturnUserPayments() {
         Payment payment1 = createTestPayment();
-        payment1.setPaymentDate(LocalDate.of(2024, 2, 15));
+        payment1.setPaymentDate(LocalDate.of(2024, 2, 15).atStartOfDay());
 
         Payment payment2 = createTestPayment();
-        payment2.setPaymentDate(LocalDate.of(2024, 2, 10));
+        payment2.setPaymentDate(LocalDate.of(2024, 2, 10).atStartOfDay());
         payment2.setId(2L);
 
         paymentRepository.save(payment1);
@@ -266,7 +267,7 @@ class PaymentServiceIntegrationTest {
                 .userId(testUserId)
                 .orderId(testOrderId)
                 .totalAmount(new BigDecimal("150.00"))
-                .paymentDate(LocalDate.now())
+                .paymentDate(LocalDateTime.now())
                 .paymentStatus(PaymentStatus.IN_WAIT)
                 .paymentType(PaymentType.REPLENISHMENT)
                 .build();

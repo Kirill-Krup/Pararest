@@ -176,7 +176,7 @@ const CartSection: React.FC<CartSectionProps> = ({ onOrderCreated }) => {
                                 return (
                                     <div key={item.menuItemId} className="cart-item">
                                         <div className="item-image">
-                                            <img src={menuItem.imageUrl} alt={menuItem.name} />
+                                            <img src={menuItem.imageUrl ?? undefined} alt={menuItem.name} />
                                         </div>
                                         <div className="item-details">
                                             <div className="item-info">

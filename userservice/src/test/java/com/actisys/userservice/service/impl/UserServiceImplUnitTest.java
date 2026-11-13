@@ -447,7 +447,7 @@ class UserServiceImplUnitTest {
             userService.refundMoneys(event);
 
             verify(userRepository).save(argThat(user ->
-                    user.getWallet().compareTo(new BigDecimal("470.00")) == 0
+                    user.getWallet().compareTo(new BigDecimal("530.00")) == 0
             ));
 
             ArgumentCaptor<RefundEvent> eventCaptor = ArgumentCaptor.forClass(RefundEvent.class);

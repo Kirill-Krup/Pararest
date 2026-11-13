@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.actisys.grpc.payment;
+
+option java_multiple_files = true;
+option java_package = "com.actisys.grpc.payment";
+option java_outer_classname = "PaymentStatsProto";
+
+service PaymentStats {
+  rpc GetRevenueStats(RevenueStatsRequest) returns (RevenueStatsResponse);
+}
+
+message RevenueStatsRequest {}
+
+message RevenueStatsResponse {
+  string revenue_amount = 1;
+  int64 revenue_operations_count = 2;
+}

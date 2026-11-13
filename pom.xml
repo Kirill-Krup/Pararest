@@ -11,6 +11,7 @@
   <url>http://maven.apache.org</url>
     <modules>
         <module>common-lib</module>
+        <module>grpc-contracts</module>
     </modules>
 
     <properties>
